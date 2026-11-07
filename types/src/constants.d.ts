@@ -1,0 +1,11 @@
+export declare const heartbeatIntervalMs = 60000;
+export declare const hostAwayGraceMs: number;
+export declare const hostAwayCheckIntervalMs = 15000;
+export declare const offlineThresholdMs = 120000;
+export declare const presenceExpiryCheckMs = 30000;
+export declare const joinStatusPollMs = 5000;
+export declare const joinStatusMaxPollMs = 30000;
+export declare const joinRequestLifetimeMs: number;
+export declare const directoryPollMs = 30000;
+export declare const resyncDebounceMs = 300;
+export declare const rateLimitedMessage = "The service is rate limiting requests right now, so your last action did not go through. Please try again in a moment.";

@@ -1,0 +1,39 @@
+{
+  "name": "planning-poker",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    "./ui": {
+      "types": "./types/src/embed/index.d.ts",
+      "default": "./ui.js"
+    },
+    "./standalone": {
+      "types": "./types/src/standalone/index.d.ts",
+      "default": "./standalone.js"
+    },
+    "./contracts": {
+      "types": "./types/src/contracts/index.d.ts",
+      "default": "./contracts.js"
+    },
+    "./engine": {
+      "types": "./types/engine/index.d.ts",
+      "default": "./engine.js"
+    },
+    "./shared/*": {
+      "types": "./types/shared/*.d.ts"
+    },
+    "./styles.css": "./poker.css"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.5.1",
+    "fluxo-ui": "^0.5.3",
+    "classnames": "^2.5.1"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

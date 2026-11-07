@@ -1,0 +1,37 @@
+import type { ClientAction } from '../../shared/types/realtime';
+import { type ConnectionStatus, type PokerRealtimeService, type ServerMessageListener, type StatusListener } from '../contracts';
+import type { PokerApiEndpoints } from './api-config';
+import type SessionService from './session-service';
+export default class RealtimeService implements PokerRealtimeService {
+    static dependencies: string[];
+    private $session;
+    private wsBaseUrl;
+    private socket;
+    private status;
+    private roomId;
+    private reconnectAttempts;
+    private reconnectTimer;
+    private pingTimer;
+    private intentionallyClosed;
+    private messageListeners;
+    private statusListeners;
+    private pendingRequests;
+    private requestSequence;
+    constructor($session: SessionService, endpoints: PokerApiEndpoints);
+    onMessage(listener: ServerMessageListener): () => void;
+    onStatusChange(listener: StatusListener): () => void;
+    getStatus(): ConnectionStatus;
+    private setStatus;
+    private emit;
+    connect(roomId: string): void;
+    private scheduleReconnect;
+    private clearReconnectTimer;
+    private startPing;
+    private stopPing;
+    send<TPayload>(action: ClientAction, payload?: TPayload): Promise<boolean>;
+    private post;
+    private settleRequest;
+    private failPendingRequests;
+    requestResync(): void;
+    disconnect(intentional?: boolean): void;
+}
