@@ -75,7 +75,7 @@ function u(e) {
 	};
 }
 // src/standalone/realtime-service.ts
-var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
+var d = 45e3, f = 1e3, p = 3e4, m = 2e4, h = class {
 	static dependencies = [e.session, t];
 	$session;
 	wsBaseUrl;
@@ -86,8 +86,11 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 	reconnectTimer = null;
 	pingTimer = null;
 	intentionallyClosed = !1;
+	reconnectState = null;
+	watchingNetwork = !1;
 	messageListeners = /* @__PURE__ */ new Set();
 	statusListeners = /* @__PURE__ */ new Set();
+	reconnectListeners = /* @__PURE__ */ new Set();
 	pendingRequests = /* @__PURE__ */ new Map();
 	requestSequence = 0;
 	constructor(e, t) {
@@ -101,6 +104,31 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 	}
 	getStatus() {
 		return this.status;
+	}
+	onReconnectChange(e) {
+		return this.reconnectListeners.add(e), () => this.reconnectListeners.delete(e);
+	}
+	reconnectNow() {
+		this.roomId === null || this.intentionallyClosed || this.socket !== null || (this.clearReconnectTimer(), this.reconnectState !== null && this.setReconnectState({
+			...this.reconnectState,
+			nextAttemptAt: null
+		}), this.connect(this.roomId));
+	}
+	setReconnectState(e) {
+		this.reconnectState = e, this.reconnectListeners.forEach((t) => {
+			try {
+				t(e);
+			} catch (e) {
+				console.error("RealtimeService reconnect listener failed", e);
+			}
+		});
+	}
+	handleOnline = () => this.reconnectNow();
+	handleOffline = () => {
+		this.roomId === null || this.intentionallyClosed || (this.disconnect(!1), this.scheduleReconnect("offline"));
+	};
+	watchNetwork(e) {
+		this.watchingNetwork !== e && typeof window < "u" && (this.watchingNetwork = e, e ? (window.addEventListener("online", this.handleOnline), window.addEventListener("offline", this.handleOffline)) : (window.removeEventListener("online", this.handleOnline), window.removeEventListener("offline", this.handleOffline)));
 	}
 	setStatus(e) {
 		this.status !== e && (this.status = e, this.statusListeners.forEach((t) => {
@@ -127,16 +155,17 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 			return;
 		}
 		if (this.socket !== null && this.roomId === e && (this.status === "connected" || this.status === "connecting")) return;
-		this.disconnect(!1), this.roomId = e, this.intentionallyClosed = !1, this.setStatus(this.reconnectAttempts > 0 ? "reconnecting" : "connecting");
+		this.disconnect(!1), this.roomId = e, this.intentionallyClosed = !1, this.watchNetwork(!0), this.setStatus(this.reconnectAttempts > 0 ? "reconnecting" : "connecting");
 		let n = `${this.wsBaseUrl}?roomId=${encodeURIComponent(e)}&token=${encodeURIComponent(t.token)}`;
 		try {
 			this.socket = new WebSocket(n);
 		} catch (e) {
-			console.error("RealtimeService could not open the WebSocket", e), this.scheduleReconnect();
+			console.error("RealtimeService could not open the WebSocket", e), this.scheduleReconnect("unreachable");
 			return;
 		}
+		let r = !1;
 		this.socket.onopen = () => {
-			this.reconnectAttempts = 0, this.setStatus("connected"), this.post({
+			r = !0, this.reconnectAttempts = 0, this.setReconnectState(null), this.setStatus("connected"), this.post({
 				action: "auth",
 				payload: {
 					token: t.token,
@@ -155,23 +184,26 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 		}, this.socket.onerror = (e) => {
 			console.error("RealtimeService socket error", e);
 		}, this.socket.onclose = () => {
-			this.stopPing(), this.socket = null, this.failPendingRequests(), this.intentionallyClosed ? this.setStatus("closed") : this.scheduleReconnect();
+			this.stopPing(), this.socket = null, this.failPendingRequests(), this.intentionallyClosed ? this.setStatus("closed") : this.scheduleReconnect(r ? "lost" : "unreachable");
 		};
 	}
-	scheduleReconnect() {
+	scheduleReconnect(e) {
 		if (this.roomId === null || this.intentionallyClosed) {
 			this.setStatus("closed");
 			return;
 		}
-		if (this.reconnectAttempts >= m) {
-			console.error("RealtimeService gave up reconnecting after repeated failures"), this.setStatus("closed");
-			return;
-		}
 		this.reconnectAttempts += 1, this.setStatus("reconnecting");
-		let e = Math.min(f * 2 ** (this.reconnectAttempts - 1), p);
-		this.clearReconnectTimer(), this.reconnectTimer = setTimeout(() => {
-			this.reconnectTimer = null, this.roomId !== null && this.connect(this.roomId);
-		}, e);
+		let t = Math.min(f * 2 ** Math.min(this.reconnectAttempts - 1, 5), p), n = typeof navigator < "u" && navigator.onLine === !1;
+		this.setReconnectState({
+			reason: n ? "offline" : e,
+			attempt: this.reconnectAttempts,
+			nextAttemptAt: Date.now() + t
+		}), this.clearReconnectTimer(), this.reconnectTimer = setTimeout(() => {
+			this.reconnectTimer = null, this.roomId !== null && (this.reconnectState !== null && this.setReconnectState({
+				...this.reconnectState,
+				nextAttemptAt: null
+			}), this.connect(this.roomId));
+		}, t);
 	}
 	clearReconnectTimer() {
 		this.reconnectTimer !== null && (clearTimeout(this.reconnectTimer), this.reconnectTimer = null);
@@ -192,7 +224,7 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 		}) ? new Promise((t) => {
 			let r = setTimeout(() => {
 				this.pendingRequests.delete(n), console.error(`RealtimeService got no acknowledgement for '${e}'`), t(!1);
-			}, h);
+			}, m);
 			this.pendingRequests.set(n, {
 				resolve: t,
 				timer: r
@@ -221,11 +253,11 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 		this.send("requestResync");
 	}
 	disconnect(e = !0) {
-		this.intentionallyClosed = e, this.clearReconnectTimer(), this.stopPing(), e && (this.roomId = null, this.reconnectAttempts = 0);
+		this.intentionallyClosed = e, this.clearReconnectTimer(), this.stopPing(), e && (this.roomId = null, this.reconnectAttempts = 0, this.watchNetwork(!1), this.setReconnectState(null));
 		let t = this.socket;
 		this.socket = null, this.failPendingRequests(), t !== null && (t.onopen = null, t.onmessage = null, t.onerror = null, t.onclose = null, (t.readyState === WebSocket.OPEN || t.readyState === WebSocket.CONNECTING) && t.close()), e && this.setStatus("closed");
 	}
-}, _ = class {
+}, g = class {
 	static dependencies = [n, e.session];
 	$ajax;
 	$session;
@@ -264,21 +296,21 @@ var d = 45e3, f = 1e3, p = 15e3, m = 10, h = 2e4, g = class {
 			return console.error("RoomService could not refresh the room session", e), this.$session.clear(), null;
 		}
 	}
-}, v = "pokerSession";
-function y(e) {
+}, _ = "pokerSession";
+function v(e) {
 	return new Date(e.expiresAt).getTime() <= Date.now();
 }
-var b = class {
+var y = class {
 	session = null;
 	constructor() {
 		this.session = this.readFromStorage();
 	}
 	readFromStorage() {
 		try {
-			let e = window.sessionStorage.getItem(v) ?? window.localStorage.getItem(v);
+			let e = window.sessionStorage.getItem(_) ?? window.localStorage.getItem(_);
 			if (!e) return null;
 			let t = JSON.parse(e);
-			return !t.token || !t.roomId || !t.sid || y(t) ? null : t;
+			return !t.token || !t.roomId || !t.sid || v(t) ? null : t;
 		} catch (e) {
 			return console.error("SessionService failed to read the stored session", e), null;
 		}
@@ -286,10 +318,10 @@ var b = class {
 	writeToStorage(e) {
 		try {
 			if (e === null) {
-				window.localStorage.removeItem(v), window.sessionStorage.removeItem(v);
+				window.localStorage.removeItem(_), window.sessionStorage.removeItem(_);
 				return;
 			}
-			window.localStorage.setItem(v, JSON.stringify(e));
+			window.localStorage.setItem(_, JSON.stringify(e));
 		} catch (e) {
 			console.error("SessionService failed to persist the session", e);
 		}
@@ -308,7 +340,7 @@ var b = class {
 		this.session = null, this.writeToStorage(null);
 	}
 	getSession() {
-		return this.session !== null && y(this.session) && this.clear(), this.session;
+		return this.session !== null && v(this.session) && this.clear(), this.session;
 	}
 	getToken() {
 		return this.getSession()?.token ?? null;
@@ -319,12 +351,12 @@ var b = class {
 	}
 };
 // src/standalone/register.ts
-function x(e, t, n) {
+function b(e, t, n) {
 	e.registerSingleton(t, n, n);
 }
-function S(r, a) {
+function x(r, a) {
 	i(r);
 	let o = u(a);
-	r.registerSingletonFactory(t, t, () => o), x(r, l, n), x(r, b, e.session), x(r, _, e.room), x(r, g, e.realtime);
+	r.registerSingletonFactory(t, t, () => o), b(r, l, n), b(r, y, e.session), b(r, g, e.room), b(r, h, e.realtime);
 }
-export { S as registerPokerApiServices };
+export { x as registerPokerApiServices };

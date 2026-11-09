@@ -8,7 +8,7 @@ import { ConfirmPopoverManager as b, SnackbarManager as x, TooltipManager as S }
 import { ServiceProvider as C } from "fluxo-ui/services";
 import { Fragment as w, jsx as T, jsxs as E } from "react/jsx-runtime";
 // src/embed/PokerApp.tsx
-var D = h(() => import("./chunks/LandingPage-D6CfCTdZ.js")), O = h(() => import("./chunks/RoomPage-DsT_hw6j.js")), k = h(() => import("./chunks/RoomsPage-DIGdxenC.js"));
+var D = h(() => import("./chunks/LandingPage-D6CfCTdZ.js")), O = h(() => import("./chunks/RoomPage-EJ4o-EM8.js")), k = h(() => import("./chunks/RoomsPage-DIGdxenC.js"));
 function A() {
 	let { host: e } = r();
 	return e.capabilities.directory ? /* @__PURE__ */ T(k, {}) : /* @__PURE__ */ T(D, {});

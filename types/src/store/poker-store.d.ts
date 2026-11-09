@@ -1,5 +1,5 @@
 import type { MemberRole, PokerInvitation, PokerIssue, PokerJoinRequest, PokerMember, PokerRoom, PokerVote, ScoreType } from '../../shared/types/poker';
-import type { ConnectionStatus, EstimateTarget } from '../contracts';
+import type { ConnectionStatus, EstimateTarget, ReconnectState } from '../contracts';
 export interface PendingIssue {
     pendingId: string;
     key: string;
@@ -22,6 +22,7 @@ export interface PokerState {
     lastRevision: number;
     viewingIssueId: string | null;
     connectionStatus: ConnectionStatus;
+    reconnect: ReconnectState | null;
     isLoaded: boolean;
     showIssuePanel: boolean;
     showJoinRequests: boolean;

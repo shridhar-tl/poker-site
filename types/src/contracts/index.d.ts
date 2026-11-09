@@ -57,8 +57,15 @@ export interface PokerSessionService {
     sessionFor(roomId: string): StoredSession | null;
 }
 export type ConnectionStatus = 'idle' | 'connecting' | 'connected' | 'reconnecting' | 'degraded' | 'closed';
+export type DisconnectReason = 'offline' | 'unreachable' | 'lost';
+export interface ReconnectState {
+    reason: DisconnectReason;
+    attempt: number;
+    nextAttemptAt: number | null;
+}
 export type ServerMessageListener = (message: ServerMessage) => void;
 export type StatusListener = (status: ConnectionStatus) => void;
+export type ReconnectListener = (state: ReconnectState | null) => void;
 export interface PokerRealtimeService {
     connect(roomId: string): void;
     disconnect(intentional?: boolean): void;
@@ -67,6 +74,8 @@ export interface PokerRealtimeService {
     onMessage(listener: ServerMessageListener): () => void;
     onStatusChange(listener: StatusListener): () => void;
     getStatus(): ConnectionStatus;
+    onReconnectChange?(listener: ReconnectListener): () => void;
+    reconnectNow?(): void;
 }
 export interface PokerIdentity {
     id?: string;

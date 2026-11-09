@@ -1,5 +1,5 @@
 import type { ClientAction } from '../../shared/types/realtime';
-import { type ConnectionStatus, type PokerRealtimeService, type ServerMessageListener, type StatusListener } from '../contracts';
+import { type ConnectionStatus, type PokerRealtimeService, type ReconnectListener, type ServerMessageListener, type StatusListener } from '../contracts';
 import type { PokerApiEndpoints } from './api-config';
 import type SessionService from './session-service';
 export default class RealtimeService implements PokerRealtimeService {
@@ -13,14 +13,23 @@ export default class RealtimeService implements PokerRealtimeService {
     private reconnectTimer;
     private pingTimer;
     private intentionallyClosed;
+    private reconnectState;
+    private watchingNetwork;
     private messageListeners;
     private statusListeners;
+    private reconnectListeners;
     private pendingRequests;
     private requestSequence;
     constructor($session: SessionService, endpoints: PokerApiEndpoints);
     onMessage(listener: ServerMessageListener): () => void;
     onStatusChange(listener: StatusListener): () => void;
     getStatus(): ConnectionStatus;
+    onReconnectChange(listener: ReconnectListener): () => void;
+    reconnectNow(): void;
+    private setReconnectState;
+    private readonly handleOnline;
+    private readonly handleOffline;
+    private watchNetwork;
     private setStatus;
     private emit;
     connect(roomId: string): void;

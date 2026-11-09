@@ -2,17 +2,17 @@ import { t as e } from "./AppLoader-D9yvNwlE.js";
 import { a as t, o as n } from "./theme-BRWg1AQm.js";
 import { a as r, n as i, o as a, u as o } from "./scores-BUpnRFKN.js";
 import { i as s, n as c, o as l, r as u, t as d } from "./estimates-Dobh8bG9.js";
-import { c as f, d as p, l as m, n as h, r as g, u as _ } from "./constants-BkFPV1oy.js";
-import { n as v, r as y, t as b } from "./LabeledField-DyAMkIEx.js";
-import { i as x, t as S } from "./avatars-r3RGoSWH.js";
-import { useCallback as C, useEffect as w, useMemo as T, useRef as E, useState as D } from "react";
-import { useParams as O } from "react-router";
-import { Autocomplete as k, Button as A, Checkbox as j, Drawer as M, Dropdown as N, Modal as ee, SelectButton as te, TextInput as P } from "fluxo-ui";
-import { Fragment as F, jsx as I, jsxs as L } from "react/jsx-runtime";
-import R from "classnames";
-import { create as z, createHook as ne } from "fluxo-ui/store";
+import { c as f, d as p, l as m, n as h, r as ee, u as g } from "./constants-BkFPV1oy.js";
+import { n as _, r as v, t as y } from "./LabeledField-DyAMkIEx.js";
+import { i as b, t as x } from "./avatars-r3RGoSWH.js";
+import { useCallback as S, useEffect as C, useMemo as w, useRef as T, useState as E } from "react";
+import { useParams as D } from "react-router";
+import { Autocomplete as O, Button as k, Checkbox as A, Drawer as j, Dropdown as M, Modal as te, SelectButton as ne, TextInput as N } from "fluxo-ui";
+import { Fragment as P, jsx as F, jsxs as I } from "react/jsx-runtime";
+import L from "classnames";
+import { create as R, createHook as re } from "fluxo-ui/store";
 // src/store/poker-store.ts
-var re = {
+var ie = {
 	roomId: "",
 	sid: "",
 	role: "player",
@@ -29,6 +29,7 @@ var re = {
 	lastRevision: 0,
 	viewingIssueId: null,
 	connectionStatus: "idle",
+	reconnect: null,
 	isLoaded: !1,
 	showIssuePanel: !1,
 	showJoinRequests: !1,
@@ -39,38 +40,38 @@ var re = {
 	pendingActions: {},
 	pendingIssues: [],
 	estimateTarget: null
-}, B = z(() => ({ ...re })), V = ne(B);
-function H(e) {
-	B.setState(e);
+}, z = R(() => ({ ...ie })), B = re(z);
+function V(e) {
+	z.setState(e);
 }
-function ie() {
-	B.setState({ ...re });
+function ae() {
+	z.setState({ ...ie });
 }
-function U(e, t) {
-	B.setState(e, t);
+function H(e, t) {
+	z.setState(e, t);
 }
-function ae(e) {
-	U((t) => ({ pendingActions: {
+function oe(e) {
+	H((t) => ({ pendingActions: {
 		...t.pendingActions,
 		[e]: (t.pendingActions[e] ?? 0) + 1
 	} }));
 }
-function oe(e) {
-	U((t) => {
+function se(e) {
+	H((t) => {
 		let n = (t.pendingActions[e] ?? 0) - 1, r = { ...t.pendingActions };
 		return n > 0 ? r[e] = n : delete r[e], { pendingActions: r };
 	});
 }
-function se(e, t) {
+function ce(e, t) {
 	return (e.pendingActions[t] ?? 0) > 0;
 }
-function W(e) {
+function U(e) {
 	return e.reduce((e, t) => (e[t.id] = t, e), {});
 }
-function ce(e) {
+function le(e) {
 	return e.reduce((e, t) => (e[t.issueId] = t, e), {});
 }
-function le(e, t, n, r = 0) {
+function ue(e, t, n, r = 0) {
 	let i = {};
 	for (let a of e) if (!a.isOnline) {
 		let e = a.lastSeenAt ? Date.parse(a.lastSeenAt) - r : NaN;
@@ -78,26 +79,26 @@ function le(e, t, n, r = 0) {
 	}
 	return i;
 }
-function G(e) {
+function W(e) {
 	return e.room !== null && e.room.moderatorId === e.sid;
 }
 // src/components/InlineSpinner.tsx
-function K({ label: e, className: t }) {
-	return /* @__PURE__ */ L("span", {
-		className: R("pk-inlineSpinner", t),
+function G({ label: e, className: t }) {
+	return /* @__PURE__ */ I("span", {
+		className: L("pk-inlineSpinner", t),
 		role: "status",
 		"aria-live": "polite",
-		children: [/* @__PURE__ */ I("span", {
+		children: [/* @__PURE__ */ F("span", {
 			className: "pk-inlineSpinner__ring",
 			"aria-hidden": !0
-		}), e && /* @__PURE__ */ I("span", {
+		}), e && /* @__PURE__ */ F("span", {
 			className: "pk-inlineSpinner__label",
 			children: e
 		})]
 	});
 }
 // src/modules/poker/pending.ts
-var q = {
+var K = {
 	vote: "vote",
 	round: "round",
 	settings: "settings",
@@ -111,36 +112,36 @@ var q = {
 	invitation: (e) => `invitation:${e}`,
 	estimate: (e) => `estimate:${e}`
 };
-function J(e) {
-	return V((t) => se(t, e));
+function q(e) {
+	return B((t) => ce(t, e));
 }
 // src/modules/poker/usePokerActions.ts
-var ue = 0, Y = /* @__PURE__ */ new Set(), de = "Could not update the story points in Jira.";
-function fe(e, t) {
+var de = 0, J = /* @__PURE__ */ new Set(), fe = "Could not update the story points in Jira.";
+function pe(e, t) {
 	return e instanceof Error && e.message ? e.message : t;
 }
-function X() {
-	let { realtime: e, session: t, message: r, host: i, issues: a } = n(), o = C(async (t, n, r) => {
-		r && ae(r);
+function Y() {
+	let { realtime: e, session: t, message: r, host: i, issues: a } = n(), o = S(async (t, n, r) => {
+		r && oe(r);
 		try {
 			let r = await e.send(t, n);
-			return r || e.requestResync(), r;
+			return !r && e.getStatus() === "connected" && e.requestResync(), r;
 		} catch (n) {
-			return console.error(`Could not send '${t}'`, n), e.requestResync(), !1;
+			return console.error(`Could not send '${t}'`, n), e.getStatus() === "connected" && e.requestResync(), !1;
 		} finally {
-			r && oe(r);
+			r && se(r);
 		}
-	}, [e]), s = C(async (e, t, n) => {
-		if (Y.has(n)) return !1;
-		Y.add(n);
+	}, [e]), s = S(async (e, t, n) => {
+		if (J.has(n)) return !1;
+		J.add(n);
 		try {
 			return await o(e, t, n);
 		} finally {
-			Y.delete(n);
+			J.delete(n);
 		}
-	}, [o]), c = C(async (e) => {
-		let t = B.getState(), n = t.room?.currentIssueId;
-		return !n || t.votesMap[n]?.reveal ? !1 : (U((t) => {
+	}, [o]), c = S(async (e) => {
+		let t = z.getState(), n = t.room?.currentIssueId;
+		return !n || t.votesMap[n]?.reveal ? !1 : (H((t) => {
 			let r = t.votesMap[n];
 			return r?.reveal ? {} : { votesMap: {
 				...t.votesMap,
@@ -157,33 +158,33 @@ function X() {
 		}), await o("submitVote", {
 			issueId: n,
 			vote: e
-		}, q.vote));
-	}, [o]), l = C(async () => {
-		let { viewingIssueId: e } = B.getState();
-		return e !== null && await s("startRound", { issueId: e }, q.round);
-	}, [s]), u = C(async () => {
-		let { viewingIssueId: e } = B.getState();
-		return e !== null && await s("restartRound", { issueId: e }, q.round);
-	}, [s]), d = C(async () => {
-		let { room: e } = B.getState();
-		return e?.currentIssueId != null && await s("revealVotes", { issueId: e.currentIssueId }, q.round);
-	}, [s]), f = C(async (e) => {
-		let { viewingIssueId: t } = B.getState();
+		}, K.vote));
+	}, [o]), l = S(async () => {
+		let { viewingIssueId: e } = z.getState();
+		return e !== null && await s("startRound", { issueId: e }, K.round);
+	}, [s]), u = S(async () => {
+		let { viewingIssueId: e } = z.getState();
+		return e !== null && await s("restartRound", { issueId: e }, K.round);
+	}, [s]), d = S(async () => {
+		let { room: e } = z.getState();
+		return e?.currentIssueId != null && await s("revealVotes", { issueId: e.currentIssueId }, K.round);
+	}, [s]), f = S(async (e) => {
+		let { viewingIssueId: t } = z.getState();
 		return t !== null && await s("setFinalScore", {
 			issueId: t,
 			finalScore: e
-		}, q.round);
-	}, [s]), p = C(async (e, t) => {
-		let n = B.getState().issuesMap[e], i = q.estimate(e);
-		if (!a || !n || Y.has(i)) return !1;
-		Y.add(i), ae(i);
+		}, K.round);
+	}, [s]), p = S(async (e, t) => {
+		let n = z.getState().issuesMap[e], i = K.estimate(e);
+		if (!a || !n || J.has(i)) return !1;
+		J.add(i), oe(i);
 		try {
 			try {
 				await a.updateEstimate(n, t);
 			} catch (e) {
-				return console.error(`Could not update the estimate of ${n.key}`, e), r.error(fe(e, de)), !1;
+				return console.error(`Could not update the estimate of ${n.key}`, e), r.error(pe(e, fe)), !1;
 			}
-			return U((n) => {
+			return H((n) => {
 				let r = n.votesMap[e];
 				return r ? { votesMap: {
 					...n.votesMap,
@@ -199,18 +200,18 @@ function X() {
 				synced: !0
 			});
 		} finally {
-			oe(i), Y.delete(i);
+			se(i), J.delete(i);
 		}
 	}, [
 		a,
 		r,
 		o
-	]), m = C(async (e) => {
+	]), m = S(async (e) => {
 		let t = e.key?.trim();
 		if (!t) return !1;
-		ue += 1;
-		let n = `pending-${ue}`;
-		U((r) => ({ pendingIssues: [...r.pendingIssues, {
+		de += 1;
+		let n = `pending-${de}`;
+		H((r) => ({ pendingIssues: [...r.pendingIssues, {
 			pendingId: n,
 			key: t,
 			summary: e.summary
@@ -221,46 +222,46 @@ function X() {
 				key: t
 			} });
 		} finally {
-			U((e) => ({ pendingIssues: e.pendingIssues.filter((e) => e.pendingId !== n) }));
+			H((e) => ({ pendingIssues: e.pendingIssues.filter((e) => e.pendingId !== n) }));
 		}
-	}, [o]), h = C((e) => s("removeIssue", { issueId: e }, q.issue(e)), [s]), g = C((e) => o("reorderIssues", { issueIds: e }), [o]), _ = C((e) => {
-		H({ viewingIssueId: e });
-	}, []), v = C((e) => (U((t) => t.room === null ? {} : { room: {
+	}, [o]), h = S((e) => s("removeIssue", { issueId: e }, K.issue(e)), [s]), ee = S((e) => o("reorderIssues", { issueIds: e }), [o]), g = S((e) => {
+		V({ viewingIssueId: e });
+	}, []), _ = S((e) => (H((t) => t.room === null ? {} : { room: {
 		...t.room,
 		settings: {
 			...t.room.settings,
 			...e
 		}
-	} }), o("updateSettings", e, q.settings)), [o]), y = C((e) => (U((t) => t.room === null ? {} : { room: {
+	} }), o("updateSettings", e, K.settings)), [o]), v = S((e) => (H((t) => t.room === null ? {} : { room: {
 		...t.room,
 		access: {
 			...t.room.access,
 			...e
 		}
-	} }), o("updateAccess", e, q.settings)), [o]), b = C((e) => o("renameRoom", { roomName: e }, q.settings), [o]), x = C((e) => (U((t) => {
+	} }), o("updateAccess", e, K.settings)), [o]), y = S((e) => o("renameRoom", { roomName: e }, K.settings), [o]), b = S((e) => (H((t) => {
 		let n = t.members.map((n) => n.id === t.sid ? {
 			...n,
 			avatarId: e
 		} : n);
 		return {
 			members: n,
-			membersMap: W(n)
+			membersMap: U(n)
 		};
-	}), o("updateAvatar", { avatarId: e }, q.avatar)), [o]), S = C((e) => s("kickMember", { sid: e }, q.member(e)), [s]), w = C((e) => s("transferModerator", { sid: e }, q.member(e)), [s]), T = C(() => s("claimModerator", {}, q.host), [s]), E = C((e) => s("approveJoin", { requestId: e }, q.joinRequest(e)), [s]), D = C((e) => s("rejectJoin", { requestId: e }, q.joinRequest(e)), [s]), O = C((e) => (H({
+	}), o("updateAvatar", { avatarId: e }, K.avatar)), [o]), x = S((e) => s("kickMember", { sid: e }, K.member(e)), [s]), C = S((e) => s("transferModerator", { sid: e }, K.member(e)), [s]), w = S(() => s("claimModerator", {}, K.host), [s]), T = S((e) => s("approveJoin", { requestId: e }, K.joinRequest(e)), [s]), E = S((e) => s("rejectJoin", { requestId: e }, K.joinRequest(e)), [s]), D = S((e) => (V({
 		bulkJoinAction: "approveAllJoin",
 		bulkDisableApproval: e
-	}), o("approveAllJoin", { disableApproval: e })), [o]), k = C(() => (H({
+	}), o("approveAllJoin", { disableApproval: e })), [o]), O = S(() => (V({
 		bulkJoinAction: "rejectAllJoin",
 		bulkDisableApproval: !1
-	}), o("rejectAllJoin", {})), [o]), A = C((e) => s("inviteMembers", { users: e }, q.invite), [s]), j = C((e) => s("revokeInvite", { userId: e }, q.invitation(e)), [s]), M = C(() => {
+	}), o("rejectAllJoin", {})), [o]), k = S((e) => s("inviteMembers", { users: e }, K.invite), [s]), A = S((e) => s("revokeInvite", { userId: e }, K.invitation(e)), [s]), j = S(() => {
 		t.clear(), i.onRoomLeft?.();
-	}, [t, i]), N = C(async (e) => {
-		let t = await s("leaveRoom", e ? { successorSid: e } : {}, q.leave);
-		return t && M(), t;
-	}, [s, M]), ee = C(async () => {
-		let e = await s("closeRoom", {}, q.leave);
-		return e && M(), e;
-	}, [s, M]), te = C(() => H({ showIssuePanel: !0 }), []), P = C(() => H({ showIssuePanel: !1 }), []), F = C(() => H({ showJoinRequests: !0 }), []), I = C(() => H({ showJoinRequests: !1 }), []), L = C(() => H({ showInvitePanel: !0 }), []), R = C(() => H({ showInvitePanel: !1 }), []), z = C(async (e, t, n) => {
+	}, [t, i]), M = S(async (e) => {
+		let t = await s("leaveRoom", e ? { successorSid: e } : {}, K.leave);
+		return t && j(), t;
+	}, [s, j]), te = S(async () => {
+		let e = await s("closeRoom", {}, K.leave);
+		return e && j(), e;
+	}, [s, j]), ne = S(() => V({ showIssuePanel: !0 }), []), N = S(() => V({ showIssuePanel: !1 }), []), P = S(() => V({ showJoinRequests: !0 }), []), F = S(() => V({ showJoinRequests: !1 }), []), I = S(() => V({ showInvitePanel: !0 }), []), L = S(() => V({ showInvitePanel: !1 }), []), R = S(async (e, t, n) => {
 		try {
 			await navigator.clipboard.writeText(e), r.success(t);
 		} catch (e) {
@@ -276,43 +277,43 @@ function X() {
 		saveEstimate: p,
 		addIssue: m,
 		removeIssue: h,
-		reorderIssues: g,
-		selectIssue: _,
-		updateSettings: v,
-		updateAccess: y,
-		renameRoom: b,
-		setAvatar: x,
-		kickMember: S,
-		transferModerator: w,
-		claimModerator: T,
-		approveJoin: E,
-		rejectJoin: D,
-		approveAllJoin: O,
-		rejectAllJoin: k,
-		inviteMembers: A,
-		revokeInvite: j,
-		leaveRoom: N,
-		closeRoom: ee,
-		showIssuePanel: te,
-		hideIssuePanel: P,
-		showJoinRequests: F,
-		hideJoinRequests: I,
-		showInvitePanel: L,
-		hideInvitePanel: R,
-		copyInviteLink: C(async () => {
-			let { roomId: e } = B.getState();
-			e && await z(i.shareUrl(e), "Invite link copied", "Could not copy the invite link.");
-		}, [z, i]),
-		copyRoomCode: C(async () => {
-			let { roomId: e } = B.getState();
-			e && await z(e, "Room code copied", "Could not copy the room code.");
-		}, [z]),
-		resync: C(() => e.requestResync(), [e])
+		reorderIssues: ee,
+		selectIssue: g,
+		updateSettings: _,
+		updateAccess: v,
+		renameRoom: y,
+		setAvatar: b,
+		kickMember: x,
+		transferModerator: C,
+		claimModerator: w,
+		approveJoin: T,
+		rejectJoin: E,
+		approveAllJoin: D,
+		rejectAllJoin: O,
+		inviteMembers: k,
+		revokeInvite: A,
+		leaveRoom: M,
+		closeRoom: te,
+		showIssuePanel: ne,
+		hideIssuePanel: N,
+		showJoinRequests: P,
+		hideJoinRequests: F,
+		showInvitePanel: I,
+		hideInvitePanel: L,
+		copyInviteLink: S(async () => {
+			let { roomId: e } = z.getState();
+			e && await R(i.shareUrl(e), "Invite link copied", "Could not copy the invite link.");
+		}, [R, i]),
+		copyRoomCode: S(async () => {
+			let { roomId: e } = z.getState();
+			e && await R(e, "Room code copied", "Could not copy the room code.");
+		}, [R]),
+		resync: S(() => e.requestResync(), [e])
 	};
 }
 // src/modules/poker/CardDeck.tsx
-function pe() {
-	let e = V((e) => e.room), t = V((e) => e.sid), n = V((e) => e.viewingIssueId), r = V((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), { submitVote: i } = X(), a = J(q.vote), s = !!n && n === e?.currentIssueId, c = !!r?.reveal, l = s && !c, u = r?.values?.[t], d = T(() => e === null ? [] : [
+function me() {
+	let e = B((e) => e.room), t = B((e) => e.sid), n = B((e) => e.viewingIssueId), r = B((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), { submitVote: i } = Y(), a = q(K.vote), s = !!n && n === e?.currentIssueId, c = !!r?.reveal, l = s && !c, u = r?.values?.[t], d = w(() => e === null ? [] : [
 		...o(e.scoreType, e.settings.maxPoints, e.settings.showHalfScore).map((e) => ({
 			value: e,
 			label: String(e)
@@ -328,26 +329,26 @@ function pe() {
 			hint: "Need a break"
 		}
 	], [e]);
-	return e === null || d.length === 0 ? null : /* @__PURE__ */ L("div", {
+	return e === null || d.length === 0 ? null : /* @__PURE__ */ I("div", {
 		className: `pk-deck ${l ? "" : "is-disabled"}`,
-		children: [/* @__PURE__ */ L("div", {
+		children: [/* @__PURE__ */ I("div", {
 			className: "pk-deck__bar",
 			children: [
-				/* @__PURE__ */ I("p", {
+				/* @__PURE__ */ F("p", {
 					className: "pk-deck__hint",
 					children: n ? c ? "Round revealed — waiting for the next round" : s ? u === void 0 ? "Pick your estimate" : "Tap another card to change your estimate" : "Waiting for the moderator to start the round" : "Select an issue to see the deck"
 				}),
-				a && /* @__PURE__ */ I(K, { label: "Saving your estimate" }),
-				!a && u !== void 0 && l && /* @__PURE__ */ L("span", {
+				a && /* @__PURE__ */ F(G, { label: "Saving your estimate" }),
+				!a && u !== void 0 && l && /* @__PURE__ */ I("span", {
 					className: "pk-deck__myVote",
-					children: ["Your estimate: ", /* @__PURE__ */ I("strong", { children: u === "~" ? "☕" : String(u) })]
+					children: ["Your estimate: ", /* @__PURE__ */ F("strong", { children: u === "~" ? "☕" : String(u) })]
 				})
 			]
-		}), /* @__PURE__ */ I("div", {
+		}), /* @__PURE__ */ F("div", {
 			className: "pk-deck__cards pk-scroll",
 			role: "group",
 			"aria-label": "Estimation cards",
-			children: d.map((e) => /* @__PURE__ */ L("button", {
+			children: d.map((e) => /* @__PURE__ */ I("button", {
 				type: "button",
 				className: `pk-card ${u === e.value ? "is-selected" : ""}`,
 				onClick: () => void i(e.value),
@@ -355,15 +356,15 @@ function pe() {
 				title: e.hint ? `${e.hint} (${e.label})` : e.label,
 				"aria-pressed": u === e.value,
 				children: [
-					/* @__PURE__ */ I("span", {
+					/* @__PURE__ */ F("span", {
 						className: "pk-card__corner",
 						children: e.label
 					}),
-					/* @__PURE__ */ I("span", {
+					/* @__PURE__ */ F("span", {
 						className: "pk-card__value",
 						children: e.label
 					}),
-					/* @__PURE__ */ I("span", {
+					/* @__PURE__ */ F("span", {
 						className: "pk-card__corner is-bottom",
 						children: e.label
 					})
@@ -373,27 +374,27 @@ function pe() {
 	});
 }
 // src/modules/poker/ConsensusCelebration.tsx
-var me = 4200, he = 28, ge = [
+var he = 4200, ge = 28, _e = [
 	330,
 	345,
 	312,
 	20,
 	48
 ];
-function _e() {
-	return Array.from({ length: he }, (e, t) => ({
+function ve() {
+	return Array.from({ length: ge }, (e, t) => ({
 		left: Math.random() * 100,
 		delay: Math.random() * 1.2,
 		duration: 2.6 + Math.random() * 1.6,
 		size: 14 + Math.random() * 16,
 		drift: (Math.random() - .5) * 160,
 		spin: (Math.random() > .5 ? 1 : -1) * (180 + Math.random() * 360),
-		hue: ge[t % ge.length]
+		hue: _e[t % _e.length]
 	}));
 }
-function ve() {
-	let e = V((e) => e.room?.currentIssueId ?? null), t = V((e) => e.room?.currentIssueId ? e.votesMap[e.room.currentIssueId] : void 0), [n, r] = D(null), i = E(null), a = !!t?.reveal, o = t?.reveal ? c(t.values) : void 0;
-	w(() => {
+function ye() {
+	let e = B((e) => e.room?.currentIssueId ?? null), t = B((e) => e.room?.currentIssueId ? e.votesMap[e.room.currentIssueId] : void 0), [n, r] = E(null), i = T(null), a = !!t?.reveal, o = t?.reveal ? c(t.values) : void 0;
+	C(() => {
 		let t = i.current;
 		i.current = {
 			issueId: e,
@@ -406,19 +407,19 @@ function ve() {
 		e,
 		a,
 		o
-	]), w(() => {
+	]), C(() => {
 		if (n === null) return;
-		let e = setTimeout(() => r(null), me);
+		let e = setTimeout(() => r(null), he);
 		return () => clearTimeout(e);
 	}, [n]);
-	let s = T(() => n ? _e() : [], [n]);
-	return n === null ? null : /* @__PURE__ */ L("div", {
+	let s = w(() => n ? ve() : [], [n]);
+	return n === null ? null : /* @__PURE__ */ I("div", {
 		className: "pk-celebration",
 		"aria-live": "polite",
-		children: [/* @__PURE__ */ I("div", {
+		children: [/* @__PURE__ */ F("div", {
 			className: "pk-celebration__blossoms",
 			"aria-hidden": !0,
-			children: s.map((e, t) => /* @__PURE__ */ I("span", {
+			children: s.map((e, t) => /* @__PURE__ */ F("span", {
 				className: "pk-celebration__blossom",
 				style: {
 					left: `${e.left}%`,
@@ -430,30 +431,30 @@ function ve() {
 					"--pk-spin": `${e.spin}deg`,
 					"--pk-hue": e.hue
 				},
-				children: /* @__PURE__ */ I(ye, {})
+				children: /* @__PURE__ */ F(be, {})
 			}, t))
-		}), /* @__PURE__ */ L("div", {
+		}), /* @__PURE__ */ I("div", {
 			className: "pk-celebration__badge",
 			role: "status",
 			children: [
-				/* @__PURE__ */ I("span", {
+				/* @__PURE__ */ F("span", {
 					className: "pk-celebration__glow",
 					"aria-hidden": !0
 				}),
-				/* @__PURE__ */ I("span", {
+				/* @__PURE__ */ F("span", {
 					className: "pk-celebration__title",
 					children: "Consensus!"
 				}),
-				/* @__PURE__ */ L("span", {
+				/* @__PURE__ */ I("span", {
 					className: "pk-celebration__text",
-					children: ["Everyone picked ", /* @__PURE__ */ I("strong", { children: n.score })]
+					children: ["Everyone picked ", /* @__PURE__ */ F("strong", { children: n.score })]
 				})
 			]
 		})]
 	}, n.id);
 }
-function ye() {
-	return /* @__PURE__ */ L("svg", {
+function be() {
+	return /* @__PURE__ */ I("svg", {
 		viewBox: "0 0 40 40",
 		width: "100%",
 		height: "100%",
@@ -463,14 +464,14 @@ function ye() {
 			144,
 			216,
 			288
-		].map((e) => /* @__PURE__ */ I("ellipse", {
+		].map((e) => /* @__PURE__ */ F("ellipse", {
 			cx: "20",
 			cy: "10",
 			rx: "7",
 			ry: "10",
 			transform: `rotate(${e} 20 20)`,
 			className: "pk-celebration__petal"
-		}, e)), /* @__PURE__ */ I("circle", {
+		}, e)), /* @__PURE__ */ F("circle", {
 			cx: "20",
 			cy: "20",
 			r: "4.5",
@@ -478,23 +479,59 @@ function ye() {
 		})]
 	});
 }
+// src/modules/poker/ConnectionNotice.tsx
+var xe = {
+	offline: "You are offline. Check your internet connection.",
+	unreachable: "Cannot reach the poker server. Check your network, VPN or firewall, or try again in a moment.",
+	lost: "The connection to the room was lost."
+}, Se = 1e3;
+function Ce() {
+	let e = B((e) => e.reconnect), { realtime: t } = n(), r = e?.nextAttemptAt ?? null, [i, a] = E(() => Date.now());
+	if (C(() => {
+		if (r === null) return;
+		a(Date.now());
+		let e = setInterval(() => a(Date.now()), Se);
+		return () => clearInterval(e);
+	}, [r]), e === null) return null;
+	let o = r === null ? 0 : Math.max(0, Math.ceil((r - i) / 1e3)), s = o > 0 ? `Retrying in ${o}s.` : "Reconnecting…";
+	return /* @__PURE__ */ I("div", {
+		className: "pk-connection",
+		role: "alert",
+		children: [/* @__PURE__ */ I("div", {
+			className: "pk-connection__body",
+			children: [/* @__PURE__ */ F("p", {
+				className: "pk-connection__title",
+				children: xe[e.reason]
+			}), /* @__PURE__ */ I("p", {
+				className: "pk-connection__detail",
+				children: ["Votes and changes cannot be sent until the connection is back. ", s]
+			})]
+		}), t.reconnectNow && /* @__PURE__ */ F(k, {
+			variant: "primary",
+			size: "sm",
+			onClick: () => t.reconnectNow?.(),
+			disabled: o === 0,
+			label: "Retry now"
+		})]
+	});
+}
 // src/modules/poker/HostAwayBanner.tsx
-function be() {
-	let e = V((e) => e.room?.moderatorId ?? ""), t = V((e) => e.sid), n = V((e) => e.offlineSince[e.room?.moderatorId ?? ""] ?? null), { claimModerator: r } = X(), [i, a] = D(() => Date.now());
-	w(() => {
+function we() {
+	let e = B((e) => e.room?.moderatorId ?? ""), t = B((e) => e.sid), n = B((e) => e.offlineSince[e.room?.moderatorId ?? ""] ?? null), { claimModerator: r } = Y(), [i, a] = E(() => Date.now());
+	C(() => {
 		if (n === null) return;
 		a(Date.now());
-		let e = setInterval(() => a(Date.now()), g);
+		let e = setInterval(() => a(Date.now()), ee);
 		return () => clearInterval(e);
 	}, [n]);
 	let o = n !== null && i - n >= 18e4;
-	return !e || e === t || !o ? null : /* @__PURE__ */ L("div", {
+	return !e || e === t || !o ? null : /* @__PURE__ */ I("div", {
 		className: "pk-away",
 		role: "status",
-		children: [/* @__PURE__ */ I("p", {
+		children: [/* @__PURE__ */ F("p", {
 			className: "pk-away__text",
 			children: "The host is away. You can take over so the round can continue."
-		}), /* @__PURE__ */ I(A, {
+		}), /* @__PURE__ */ F(k, {
 			variant: "primary",
 			size: "sm",
 			onClick: r,
@@ -503,48 +540,48 @@ function be() {
 	});
 }
 // src/components/MemberAvatar.tsx
-function Z({ avatarId: e, avatarUrl: t, className: n }) {
-	let [r, i] = D(null), a = !x(e) && t && r !== t ? t : null;
-	return /* @__PURE__ */ I("span", {
-		className: R("pk-memberAvatar", n),
+function X({ avatarId: e, avatarUrl: t, className: n }) {
+	let [r, i] = E(null), a = !b(e) && t && r !== t ? t : null;
+	return /* @__PURE__ */ F("span", {
+		className: L("pk-memberAvatar", n),
 		"aria-hidden": !0,
-		children: a ? /* @__PURE__ */ I("img", {
+		children: a ? /* @__PURE__ */ F("img", {
 			src: a,
 			alt: "",
 			loading: "lazy",
 			referrerPolicy: "no-referrer",
 			onError: () => i(a)
-		}) : S(e)
+		}) : x(e)
 	});
 }
 // src/modules/poker/InvitePanel.tsx
-function xe() {
-	let e = V((e) => e.showInvitePanel), t = V((e) => e.invitations), n = V(G), { hideInvitePanel: r, inviteMembers: i, revokeInvite: a } = X(), [o, s] = D([]);
-	if (w(() => {
+function Te() {
+	let e = B((e) => e.showInvitePanel), t = B((e) => e.invitations), n = B(W), { hideInvitePanel: r, inviteMembers: i, revokeInvite: a } = Y(), [o, s] = E([]);
+	if (C(() => {
 		e || s([]);
 	}, [e]), !n) return null;
 	let c = t.map((e) => e.invitee.id);
-	return /* @__PURE__ */ I(M, {
+	return /* @__PURE__ */ F(j, {
 		open: e,
 		onClose: r,
 		position: "right",
 		size: "420px",
 		title: "Invite people",
-		children: /* @__PURE__ */ L("div", {
+		children: /* @__PURE__ */ I("div", {
 			className: "pk-panel",
-			children: [/* @__PURE__ */ L("section", {
+			children: [/* @__PURE__ */ I("section", {
 				className: "pk-panel__section",
 				children: [
-					/* @__PURE__ */ I("h3", {
+					/* @__PURE__ */ F("h3", {
 						className: "pk-panel__sectionTitle",
 						children: "Add people"
 					}),
-					/* @__PURE__ */ I(v, {
+					/* @__PURE__ */ F(_, {
 						selected: o,
 						onChange: s,
 						excludeIds: c
 					}),
-					/* @__PURE__ */ I(A, {
+					/* @__PURE__ */ F(k, {
 						variant: "primary",
 						size: "sm",
 						disabled: o.length === 0,
@@ -553,47 +590,47 @@ function xe() {
 						},
 						label: o.length > 0 ? `Invite ${o.length}` : "Invite"
 					}),
-					/* @__PURE__ */ I("p", {
+					/* @__PURE__ */ F("p", {
 						className: "pk-form__hint",
 						children: "Invited people join directly and see this room under Invited to you."
 					})
 				]
-			}), /* @__PURE__ */ L("section", {
+			}), /* @__PURE__ */ I("section", {
 				className: "pk-panel__section",
-				children: [/* @__PURE__ */ L("h3", {
+				children: [/* @__PURE__ */ I("h3", {
 					className: "pk-panel__sectionTitle",
-					children: ["Invited", /* @__PURE__ */ I("span", {
+					children: ["Invited", /* @__PURE__ */ F("span", {
 						className: "pk-panel__count",
 						children: t.length
 					})]
-				}), t.length === 0 ? /* @__PURE__ */ I("p", {
+				}), t.length === 0 ? /* @__PURE__ */ F("p", {
 					className: "pk-panel__empty",
 					children: "No pending invitations."
-				}) : /* @__PURE__ */ I("ul", {
+				}) : /* @__PURE__ */ F("ul", {
 					className: "pk-requests__list",
-					children: t.map((e) => /* @__PURE__ */ L("li", {
+					children: t.map((e) => /* @__PURE__ */ I("li", {
 						className: "pk-requests__item",
 						children: [
-							/* @__PURE__ */ I(Z, {
+							/* @__PURE__ */ F(X, {
 								avatarId: null,
 								avatarUrl: e.invitee.avatarUrl,
 								className: "pk-requests__avatar"
 							}),
-							/* @__PURE__ */ L("div", {
+							/* @__PURE__ */ I("div", {
 								className: "pk-requests__info",
-								children: [/* @__PURE__ */ I("p", {
+								children: [/* @__PURE__ */ F("p", {
 									className: "pk-requests__name",
 									title: e.invitee.name,
 									children: e.invitee.name
-								}), e.invitee.email && /* @__PURE__ */ I("p", {
+								}), e.invitee.email && /* @__PURE__ */ F("p", {
 									className: "pk-requests__email",
 									title: e.invitee.email,
 									children: e.invitee.email
 								})]
 							}),
-							/* @__PURE__ */ I("div", {
+							/* @__PURE__ */ F("div", {
 								className: "pk-requests__actions",
-								children: /* @__PURE__ */ I(A, {
+								children: /* @__PURE__ */ F(k, {
 									variant: "danger",
 									layout: "outlined",
 									size: "sm",
@@ -609,16 +646,37 @@ function xe() {
 	});
 }
 // src/modules/poker/IssuePicker.tsx
-var Se = [{
+function Ee(e) {
+	let t = e.value;
+	return /* @__PURE__ */ I("span", {
+		className: "pk-issueOption",
+		children: [
+			t.icon && /* @__PURE__ */ F("img", {
+				src: t.icon,
+				alt: "",
+				className: "pk-issueOption__icon"
+			}),
+			/* @__PURE__ */ F("span", {
+				className: "pk-issueOption__key",
+				children: t.key
+			}),
+			t.summary && /* @__PURE__ */ F("span", {
+				className: "pk-issueOption__summary",
+				children: t.summary
+			})
+		]
+	});
+}
+var De = [{
 	value: "jira",
 	label: "Search Jira"
 }, {
 	value: "custom",
 	label: "Custom item"
 }];
-function Ce({ onPick: e }) {
-	let { issues: t } = n(), [r, i] = D(null), [a, o] = D("jira");
-	return w(() => {
+function Oe({ onPick: e }) {
+	let { issues: t } = n(), [r, i] = E(null), [a, o] = E("jira");
+	return C(() => {
 		if (t === null) {
 			i(!1);
 			return;
@@ -631,24 +689,24 @@ function Ce({ onPick: e }) {
 		}), () => {
 			e = !0;
 		};
-	}, [t]), r === null ? /* @__PURE__ */ I(P, {
+	}, [t]), r === null ? /* @__PURE__ */ F(N, {
 		value: "",
 		placeholder: "Checking for an issue source…",
 		disabled: !0
-	}) : r ? /* @__PURE__ */ L("div", {
+	}) : r ? /* @__PURE__ */ I("div", {
 		className: "pk-issuePicker",
-		children: [/* @__PURE__ */ I(te, {
-			items: Se,
+		children: [/* @__PURE__ */ F(ne, {
+			items: De,
 			value: a,
 			onChange: (e) => o(e.value === "custom" ? "custom" : "jira"),
 			variant: "segmented",
 			fullWidth: !0,
 			ariaLabel: "How to add an issue"
-		}), I(a === "jira" ? we : Te, { onPick: e })]
-	}) : /* @__PURE__ */ I(Te, { onPick: e });
+		}), F(a === "jira" ? ke : Ae, { onPick: e })]
+	}) : /* @__PURE__ */ F(Ae, { onPick: e });
 }
-function we({ onPick: e }) {
-	let { issues: t } = n(), [r, i] = D(""), [a, o] = D([]), [s, c] = D(!1), l = C(async (e) => {
+function ke({ onPick: e }) {
+	let { issues: t } = n(), [r, i] = E(""), [a, o] = E([]), [s, c] = E(!1), l = S(async (e) => {
 		if (t === null || e.trim().length < 2) o([]);
 		else {
 			c(!0);
@@ -664,30 +722,31 @@ function we({ onPick: e }) {
 				c(!1);
 			}
 		}
-	}, [t]), u = C((t) => {
+	}, [t]), u = S((t) => {
 		e(t), i(""), o([]);
 	}, [e]);
-	return /* @__PURE__ */ L("div", {
+	return /* @__PURE__ */ I("div", {
 		className: "pk-issuePicker__mode",
-		children: [/* @__PURE__ */ I(k, {
+		children: [/* @__PURE__ */ F(O, {
 			items: a,
 			value: r,
 			onChange: (e) => i(String(e.value)),
 			onFilter: l,
 			onSelect: (e) => u(e.value),
+			renderItem: Ee,
 			loading: s,
 			placeholder: "Type a key or words from the summary…",
 			minLength: 2,
 			debounceMs: 300,
 			emptyMessage: "No matching issues. Use Custom item to add it by hand."
-		}), /* @__PURE__ */ I("p", {
+		}), /* @__PURE__ */ F("p", {
 			className: "pk-issuePicker__hint",
 			children: "Choosing an issue from the results adds it to the backlog straight away."
 		})]
 	});
 }
-function Te({ onPick: e }) {
-	let [t, n] = D(""), [r, i] = D(""), a = t.trim().length > 0, o = () => {
+function Ae({ onPick: e }) {
+	let [t, n] = E(""), [r, i] = E(""), a = t.trim().length > 0, o = () => {
 		a && (e({
 			key: t.trim(),
 			summary: r.trim() || void 0
@@ -695,13 +754,13 @@ function Te({ onPick: e }) {
 	}, s = (e) => {
 		e.key === "Enter" && (e.preventDefault(), o());
 	};
-	return /* @__PURE__ */ L("div", {
+	return /* @__PURE__ */ I("div", {
 		className: "pk-issuePicker__mode",
 		children: [
-			/* @__PURE__ */ I(b, {
+			/* @__PURE__ */ F(y, {
 				label: "Title or key",
 				required: !0,
-				children: /* @__PURE__ */ I(P, {
+				children: /* @__PURE__ */ F(N, {
 					value: t,
 					onChange: (e) => n(String(e.value)),
 					onKeyDown: s,
@@ -709,9 +768,9 @@ function Te({ onPick: e }) {
 					maxLength: 64
 				})
 			}),
-			/* @__PURE__ */ I(b, {
+			/* @__PURE__ */ F(y, {
 				label: "Description",
-				children: /* @__PURE__ */ I(P, {
+				children: /* @__PURE__ */ F(N, {
 					value: r,
 					onChange: (e) => i(String(e.value)),
 					onKeyDown: s,
@@ -719,7 +778,7 @@ function Te({ onPick: e }) {
 					maxLength: 500
 				})
 			}),
-			/* @__PURE__ */ I(A, {
+			/* @__PURE__ */ F(k, {
 				variant: "primary",
 				size: "sm",
 				onClick: o,
@@ -730,87 +789,87 @@ function Te({ onPick: e }) {
 	});
 }
 // src/modules/poker/IssuePanel.tsx
-var Ee = s.map((e) => ({
+var je = s.map((e) => ({
 	value: e,
 	label: u[e]
 }));
-function De() {
-	let e = V((e) => e.showIssuePanel), t = V((e) => e.room), n = V((e) => e.viewingIssueId), r = V((e) => e.votesMap), i = V(G), a = V((e) => e.pendingIssues), { hideIssuePanel: o, addIssue: s } = X(), c = t?.issues ?? [], l = c.length + a.length;
-	return /* @__PURE__ */ I(M, {
+function Me() {
+	let e = B((e) => e.showIssuePanel), t = B((e) => e.room), n = B((e) => e.viewingIssueId), r = B((e) => e.votesMap), i = B(W), a = B((e) => e.pendingIssues), { hideIssuePanel: o, addIssue: s } = Y(), c = t?.issues ?? [], l = c.length + a.length;
+	return /* @__PURE__ */ F(j, {
 		open: e,
 		onClose: o,
 		position: "right",
 		size: "420px",
 		title: i ? "Issues & settings" : "Issues",
-		children: /* @__PURE__ */ L("div", {
+		children: /* @__PURE__ */ I("div", {
 			className: "pk-panel",
 			children: [
-				i && /* @__PURE__ */ L("section", {
+				i && /* @__PURE__ */ I("section", {
+					className: "pk-panel__section",
+					children: [/* @__PURE__ */ F("h3", {
+						className: "pk-panel__sectionTitle",
+						children: "Add an issue"
+					}), /* @__PURE__ */ F(Oe, { onPick: s })]
+				}),
+				/* @__PURE__ */ I("section", {
 					className: "pk-panel__section",
 					children: [/* @__PURE__ */ I("h3", {
 						className: "pk-panel__sectionTitle",
-						children: "Add an issue"
-					}), /* @__PURE__ */ I(Ce, { onPick: s })]
-				}),
-				/* @__PURE__ */ L("section", {
-					className: "pk-panel__section",
-					children: [/* @__PURE__ */ L("h3", {
-						className: "pk-panel__sectionTitle",
-						children: ["Backlog", /* @__PURE__ */ I("span", {
+						children: ["Backlog", /* @__PURE__ */ F("span", {
 							className: "pk-panel__count",
 							children: l
 						})]
-					}), l === 0 ? /* @__PURE__ */ I("p", {
+					}), l === 0 ? /* @__PURE__ */ F("p", {
 						className: "pk-panel__empty",
 						children: i ? "Add an issue to start estimating." : "The moderator has not added any issues yet."
-					}) : /* @__PURE__ */ L("ul", {
+					}) : /* @__PURE__ */ I("ul", {
 						className: "pk-panel__list",
-						children: [c.map((e) => /* @__PURE__ */ I(ke, {
+						children: [c.map((e) => /* @__PURE__ */ F(Pe, {
 							issue: e,
 							isSelected: n === e.id,
 							isEstimating: t?.currentIssueId === e.id,
 							finalScore: r[e.id]?.reveal ? r[e.id]?.finalScore : void 0,
 							isSynced: r[e.id]?.syncedScore !== void 0,
 							isModerator: i
-						}, e.id)), a.map((e) => /* @__PURE__ */ I(Oe, { issue: e }, e.pendingId))]
+						}, e.id)), a.map((e) => /* @__PURE__ */ F(Ne, { issue: e }, e.pendingId))]
 					})]
 				}),
-				i && t !== null && /* @__PURE__ */ I(Ae, {})
+				i && t !== null && /* @__PURE__ */ F(Fe, {})
 			]
 		})
 	});
 }
-function Oe({ issue: e }) {
-	return /* @__PURE__ */ I("li", { children: /* @__PURE__ */ L("div", {
+function Ne({ issue: e }) {
+	return /* @__PURE__ */ F("li", { children: /* @__PURE__ */ I("div", {
 		className: "pk-issueRow is-pending",
 		"aria-busy": !0,
 		children: [
-			/* @__PURE__ */ I("div", {
+			/* @__PURE__ */ F("div", {
 				className: "pk-issueRow__icon",
 				"aria-hidden": !0,
-				children: /* @__PURE__ */ I("span", { children: "◇" })
+				children: /* @__PURE__ */ F("span", { children: "◇" })
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-issueRow__body",
-				children: [/* @__PURE__ */ I("div", {
+				children: [/* @__PURE__ */ F("div", {
 					className: "pk-issueRow__keyLine",
-					children: /* @__PURE__ */ I("span", {
+					children: /* @__PURE__ */ F("span", {
 						className: "pk-issueRow__key",
 						children: e.key
 					})
-				}), e.summary && /* @__PURE__ */ I("p", {
+				}), e.summary && /* @__PURE__ */ F("p", {
 					className: "pk-issueRow__summary",
 					children: e.summary
 				})]
 			}),
-			/* @__PURE__ */ I(K, { label: "Adding" })
+			/* @__PURE__ */ F(G, { label: "Adding" })
 		]
 	}) });
 }
-function ke({ issue: e, isSelected: t, isEstimating: n, finalScore: r, isSynced: i, isModerator: a }) {
-	let { selectIssue: o, removeIssue: s } = X(), c = J(q.issue(e.id));
-	return /* @__PURE__ */ I("li", { children: /* @__PURE__ */ L("div", {
-		className: R("pk-issueRow", {
+function Pe({ issue: e, isSelected: t, isEstimating: n, finalScore: r, isSynced: i, isModerator: a }) {
+	let { selectIssue: o, removeIssue: s } = Y(), c = q(K.issue(e.id));
+	return /* @__PURE__ */ F("li", { children: /* @__PURE__ */ I("div", {
+		className: L("pk-issueRow", {
 			"is-selected": t,
 			"is-pending": c
 		}),
@@ -823,41 +882,41 @@ function ke({ issue: e, isSelected: t, isEstimating: n, finalScore: r, isSynced:
 		tabIndex: 0,
 		title: e.summary,
 		children: [
-			/* @__PURE__ */ I("div", {
+			/* @__PURE__ */ F("div", {
 				className: "pk-issueRow__icon",
 				"aria-hidden": !0,
-				children: e.icon ? /* @__PURE__ */ I("img", {
+				children: e.icon ? /* @__PURE__ */ F("img", {
 					src: e.icon,
 					alt: ""
-				}) : /* @__PURE__ */ I("span", { children: "◇" })
+				}) : /* @__PURE__ */ F("span", { children: "◇" })
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-issueRow__body",
-				children: [/* @__PURE__ */ L("div", {
+				children: [/* @__PURE__ */ I("div", {
 					className: "pk-issueRow__keyLine",
 					children: [
-						/* @__PURE__ */ I("span", {
+						/* @__PURE__ */ F("span", {
 							className: "pk-issueRow__key",
 							children: e.key
 						}),
-						n && /* @__PURE__ */ I("span", {
+						n && /* @__PURE__ */ F("span", {
 							className: "pk-issueRow__tag is-warning",
 							children: "Voting"
 						}),
-						r !== void 0 && /* @__PURE__ */ I("span", {
+						r !== void 0 && /* @__PURE__ */ F("span", {
 							className: "pk-issueRow__tag is-success",
 							title: i ? "Saved in Jira" : void 0,
 							children: i ? `${String(r)} ✓` : String(r)
 						})
 					]
-				}), e.summary && /* @__PURE__ */ I("p", {
+				}), e.summary && /* @__PURE__ */ F("p", {
 					className: "pk-issueRow__summary",
 					children: e.summary
 				})]
 			}),
-			c ? /* @__PURE__ */ I(K, { label: "Removing" }) : /* @__PURE__ */ L("div", {
+			c ? /* @__PURE__ */ F(G, { label: "Removing" }) : /* @__PURE__ */ I("div", {
 				className: "pk-issueRow__actions",
-				children: [e.url && /* @__PURE__ */ I("a", {
+				children: [e.url && /* @__PURE__ */ F("a", {
 					href: e.url,
 					target: "_blank",
 					rel: "noopener noreferrer",
@@ -865,7 +924,7 @@ function ke({ issue: e, isSelected: t, isEstimating: n, finalScore: r, isSynced:
 					className: "pk-issueRow__action",
 					title: "Open in Jira",
 					children: "↗"
-				}), a && /* @__PURE__ */ I("button", {
+				}), a && /* @__PURE__ */ F("button", {
 					type: "button",
 					className: "pk-issueRow__action is-danger",
 					onClick: (t) => {
@@ -878,53 +937,53 @@ function ke({ issue: e, isSelected: t, isEstimating: n, finalScore: r, isSynced:
 		]
 	}) });
 }
-function Ae() {
-	let e = V((e) => e.room), { updateSettings: t, updateAccess: i } = X(), { host: o } = n(), s = J(q.settings), c = V((e) => e.estimateTarget);
+function Fe() {
+	let e = B((e) => e.room), { updateSettings: t, updateAccess: i } = Y(), { host: o } = n(), s = q(K.settings), c = B((e) => e.estimateTarget);
 	if (e === null) return null;
 	let { settings: u, scoreType: d } = e, f = r(d);
-	return /* @__PURE__ */ L("section", {
+	return /* @__PURE__ */ I("section", {
 		className: "pk-panel__section",
-		children: [/* @__PURE__ */ L("h3", {
+		children: [/* @__PURE__ */ I("h3", {
 			className: "pk-panel__sectionTitle",
-			children: ["Round settings", s && /* @__PURE__ */ I(K, { label: "Saving" })]
-		}), /* @__PURE__ */ L("div", {
+			children: ["Round settings", s && /* @__PURE__ */ F(G, { label: "Saving" })]
+		}), /* @__PURE__ */ I("div", {
 			className: "pk-panel__settings",
 			children: [
-				/* @__PURE__ */ L("p", {
+				/* @__PURE__ */ I("p", {
 					className: "pk-panel__deck",
-					children: ["Deck: ", /* @__PURE__ */ I("strong", { children: a[d] })]
+					children: ["Deck: ", /* @__PURE__ */ F("strong", { children: a[d] })]
 				}),
-				/* @__PURE__ */ I(j, {
+				/* @__PURE__ */ F(A, {
 					checked: e.access.requireApproval,
 					onChange: (e) => i({ requireApproval: !!e.value }),
 					label: "Require host approval before new players join"
 				}),
-				o.capabilities.listing && /* @__PURE__ */ I(j, {
+				o.capabilities.listing && /* @__PURE__ */ F(A, {
 					checked: e.access.listed,
 					onChange: (e) => i({ listed: !!e.value }),
 					label: "List this room in the directory"
 				}),
-				/* @__PURE__ */ I(j, {
+				/* @__PURE__ */ F(A, {
 					checked: u.autoReveal,
 					onChange: (e) => t({ autoReveal: !!e.value }),
 					label: "Reveal automatically once everyone has voted"
 				}),
-				/* @__PURE__ */ I(j, {
+				/* @__PURE__ */ F(A, {
 					checked: u.allowRevote,
 					onChange: (e) => t({ allowRevote: !!e.value }),
 					label: "Allow players to change their estimate before reveal"
 				}),
-				d !== 3 && /* @__PURE__ */ L(F, { children: [/* @__PURE__ */ I(j, {
+				d !== 3 && /* @__PURE__ */ I(P, { children: [/* @__PURE__ */ F(A, {
 					checked: u.showHalfScore,
 					onChange: (e) => t({ showHalfScore: !!e.value }),
 					label: "Show the 0.5 card"
-				}), /* @__PURE__ */ L("div", {
+				}), /* @__PURE__ */ I("div", {
 					className: "pk-panel__field",
-					children: [/* @__PURE__ */ I("label", {
+					children: [/* @__PURE__ */ F("label", {
 						className: "pk-panel__fieldLabel",
 						htmlFor: "pk-maxPoints",
 						children: "Highest card"
-					}), /* @__PURE__ */ I(N, {
+					}), /* @__PURE__ */ F(M, {
 						id: "pk-maxPoints",
 						value: u.maxPoints,
 						onChange: (e) => t({ maxPoints: Number(e.value) }),
@@ -934,22 +993,22 @@ function Ae() {
 						}))
 					})]
 				})] }),
-				c !== null && l(d) && /* @__PURE__ */ L("div", {
+				c !== null && l(d) && /* @__PURE__ */ I("div", {
 					className: "pk-panel__field",
 					children: [
-						/* @__PURE__ */ I("label", {
+						/* @__PURE__ */ F("label", {
 							className: "pk-panel__fieldLabel",
 							htmlFor: "pk-estimateSync",
 							children: "Update story points in Jira"
 						}),
-						/* @__PURE__ */ I(N, {
+						/* @__PURE__ */ F(M, {
 							id: "pk-estimateSync",
 							value: u.estimateSync,
 							onChange: (e) => t({ estimateSync: e.value }),
-							options: Ee,
+							options: je,
 							disabled: !c.ready
 						}),
-						/* @__PURE__ */ I("p", {
+						/* @__PURE__ */ F("p", {
 							className: "pk-panel__fieldHint",
 							children: c.ready ? `Saved to the "${c.fieldName}" field. You can always change the value and update it by hand after the reveal.` : c.reason
 						})
@@ -960,37 +1019,37 @@ function Ae() {
 	});
 }
 // src/modules/poker/JoinRequestsPanel.tsx
-function je() {
-	let e = V((e) => e.showJoinRequests), t = V((e) => e.joinRequests), n = V((e) => e.room?.access.requireApproval ?? !1), r = V(G), { hideJoinRequests: i, approveJoin: a, rejectJoin: o, approveAllJoin: s, rejectAllJoin: c } = X(), [l, u] = D(!1);
+function Ie() {
+	let e = B((e) => e.showJoinRequests), t = B((e) => e.joinRequests), n = B((e) => e.room?.access.requireApproval ?? !1), r = B(W), { hideJoinRequests: i, approveJoin: a, rejectJoin: o, approveAllJoin: s, rejectAllJoin: c } = Y(), [l, u] = E(!1);
 	if (!r) return null;
 	let d = t.length > 0;
-	return /* @__PURE__ */ I(M, {
+	return /* @__PURE__ */ F(j, {
 		open: e,
 		onClose: i,
 		position: "right",
 		size: "420px",
 		title: "Join requests",
-		children: /* @__PURE__ */ I("div", {
+		children: /* @__PURE__ */ F("div", {
 			className: "pk-panel",
-			children: /* @__PURE__ */ L("section", {
+			children: /* @__PURE__ */ I("section", {
 				className: "pk-panel__section",
 				children: [
-					/* @__PURE__ */ L("h3", {
+					/* @__PURE__ */ I("h3", {
 						className: "pk-panel__sectionTitle",
-						children: ["Waiting to join", /* @__PURE__ */ I("span", {
+						children: ["Waiting to join", /* @__PURE__ */ F("span", {
 							className: "pk-panel__count",
 							children: t.length
 						})]
 					}),
-					/* @__PURE__ */ L("div", {
+					/* @__PURE__ */ I("div", {
 						className: "pk-requests__bulk",
-						children: [/* @__PURE__ */ I(A, {
+						children: [/* @__PURE__ */ F(k, {
 							variant: "primary",
 							size: "sm",
 							disabled: !d,
 							onClick: () => s(l),
 							label: d ? `Approve all (${t.length})` : "Approve all"
-						}), /* @__PURE__ */ I(A, {
+						}), /* @__PURE__ */ F(k, {
 							variant: "danger",
 							layout: "outlined",
 							size: "sm",
@@ -999,40 +1058,40 @@ function je() {
 							label: "Reject all"
 						})]
 					}),
-					n && /* @__PURE__ */ I(j, {
+					n && /* @__PURE__ */ F(A, {
 						checked: l,
 						onChange: (e) => u(!!e.value),
 						label: "Turn off approval for this room when I approve all"
 					}),
-					d ? /* @__PURE__ */ I("ul", {
+					d ? /* @__PURE__ */ F("ul", {
 						className: "pk-requests__list",
-						children: t.map((e) => /* @__PURE__ */ L("li", {
+						children: t.map((e) => /* @__PURE__ */ I("li", {
 							className: "pk-requests__item",
 							children: [
-								/* @__PURE__ */ I(Z, {
+								/* @__PURE__ */ F(X, {
 									avatarId: e.avatarId,
 									avatarUrl: e.avatarUrl,
 									className: "pk-requests__avatar"
 								}),
-								/* @__PURE__ */ L("div", {
+								/* @__PURE__ */ I("div", {
 									className: "pk-requests__info",
-									children: [/* @__PURE__ */ I("p", {
+									children: [/* @__PURE__ */ F("p", {
 										className: "pk-requests__name",
 										title: e.name,
 										children: e.name
-									}), /* @__PURE__ */ I("p", {
+									}), /* @__PURE__ */ F("p", {
 										className: "pk-requests__time",
 										children: new Date(e.createdAt).toLocaleTimeString()
 									})]
 								}),
-								/* @__PURE__ */ L("div", {
+								/* @__PURE__ */ I("div", {
 									className: "pk-requests__actions",
-									children: [/* @__PURE__ */ I(A, {
+									children: [/* @__PURE__ */ F(k, {
 										variant: "primary",
 										size: "sm",
 										onClick: () => a(e.requestId),
 										label: "Approve"
-									}), /* @__PURE__ */ I(A, {
+									}), /* @__PURE__ */ F(k, {
 										variant: "danger",
 										layout: "outlined",
 										size: "sm",
@@ -1042,7 +1101,7 @@ function je() {
 								})
 							]
 						}, e.requestId))
-					}) : /* @__PURE__ */ I("p", {
+					}) : /* @__PURE__ */ F("p", {
 						className: "pk-panel__empty",
 						children: "No one is waiting to join."
 					})
@@ -1052,42 +1111,42 @@ function je() {
 	});
 }
 // src/modules/poker/MembersTable.tsx
-function Me(e) {
+function Le(e) {
 	return e === void 0 ? "–" : e === "?" ? "?" : e === "~" ? "☕" : String(e);
 }
-function Ne() {
-	let e = V((e) => e.members), t = V((e) => e.sid), n = V((e) => e.room?.moderatorId ?? ""), r = V((e) => e.room?.currentIssueId ?? null), i = V((e) => e.viewingIssueId), a = V((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), o = V(G), s = !!i && i === r, c = !!a?.reveal, l = T(() => [...e].sort((e, r) => e.id === t ? -1 : r.id === t ? 1 : e.id === n ? -1 : r.id === n ? 1 : e.name.localeCompare(r.name)), [
+function Re() {
+	let e = B((e) => e.members), t = B((e) => e.sid), n = B((e) => e.room?.moderatorId ?? ""), r = B((e) => e.room?.currentIssueId ?? null), i = B((e) => e.viewingIssueId), a = B((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), o = B(W), s = !!i && i === r, c = !!a?.reveal, l = w(() => [...e].sort((e, r) => e.id === t ? -1 : r.id === t ? 1 : e.id === n ? -1 : r.id === n ? 1 : e.name.localeCompare(r.name)), [
 		e,
 		t,
 		n
 	]);
-	return e.length === 0 ? /* @__PURE__ */ I("section", {
+	return e.length === 0 ? /* @__PURE__ */ F("section", {
 		className: "pk-table",
-		children: /* @__PURE__ */ I("div", {
+		children: /* @__PURE__ */ F("div", {
 			className: "pk-table__empty",
-			children: /* @__PURE__ */ I("p", { children: "Waiting for players to join…" })
+			children: /* @__PURE__ */ F("p", { children: "Waiting for players to join…" })
 		})
-	}) : /* @__PURE__ */ L("section", {
+	}) : /* @__PURE__ */ I("section", {
 		className: "pk-table",
-		children: [/* @__PURE__ */ L("header", {
+		children: [/* @__PURE__ */ I("header", {
 			className: "pk-table__head",
 			children: [
-				/* @__PURE__ */ I("h2", {
+				/* @__PURE__ */ F("h2", {
 					className: "pk-table__title",
 					children: "Players"
 				}),
-				c && /* @__PURE__ */ I("span", {
+				c && /* @__PURE__ */ F("span", {
 					className: "pk-table__badge is-success",
 					children: "Cards revealed"
 				}),
-				s && !c && /* @__PURE__ */ I("span", {
+				s && !c && /* @__PURE__ */ F("span", {
 					className: "pk-table__badge is-warning",
 					children: "Round in progress"
 				})
 			]
-		}), /* @__PURE__ */ I("ul", {
+		}), /* @__PURE__ */ F("ul", {
 			className: "pk-table__grid",
-			children: l.map((e) => /* @__PURE__ */ I(Pe, {
+			children: l.map((e) => /* @__PURE__ */ F(ze, {
 				member: e,
 				vote: a?.values?.[e.id],
 				issueId: i,
@@ -1100,67 +1159,67 @@ function Ne() {
 		})]
 	});
 }
-function Pe({ member: e, vote: t, issueId: n, isSelf: r, isRoomModerator: i, isVotingActive: a, revealed: o, canManage: s }) {
-	let { kickMember: c, transferModerator: l } = X(), u = J(q.member(e.id)), d = n !== null && e.votedIssueIds.includes(n), f = o ? "revealed" : a ? d ? "locked" : "thinking" : "idle";
-	return /* @__PURE__ */ L("li", {
-		className: R("pk-seat", `is-${f}`, {
+function ze({ member: e, vote: t, issueId: n, isSelf: r, isRoomModerator: i, isVotingActive: a, revealed: o, canManage: s }) {
+	let { kickMember: c, transferModerator: l } = Y(), u = q(K.member(e.id)), d = n !== null && e.votedIssueIds.includes(n), f = o ? "revealed" : a ? d ? "locked" : "thinking" : "idle";
+	return /* @__PURE__ */ I("li", {
+		className: L("pk-seat", `is-${f}`, {
 			"is-offline": !e.isOnline,
 			"is-pending": u
 		}),
 		"aria-busy": u,
 		children: [
-			/* @__PURE__ */ I("div", {
+			/* @__PURE__ */ F("div", {
 				className: "pk-seat__card",
 				"aria-hidden": !0,
-				children: f === "revealed" ? /* @__PURE__ */ I("span", {
+				children: f === "revealed" ? /* @__PURE__ */ F("span", {
 					className: "pk-seat__vote",
-					children: Me(t)
-				}) : f === "locked" ? /* @__PURE__ */ I("span", {
+					children: Le(t)
+				}) : f === "locked" ? /* @__PURE__ */ F("span", {
 					className: "pk-seat__cardBack",
 					children: "✓"
-				}) : f === "thinking" ? /* @__PURE__ */ L("span", {
+				}) : f === "thinking" ? /* @__PURE__ */ I("span", {
 					className: "pk-seat__dots",
 					children: [
-						/* @__PURE__ */ I("i", {}),
-						/* @__PURE__ */ I("i", {}),
-						/* @__PURE__ */ I("i", {})
+						/* @__PURE__ */ F("i", {}),
+						/* @__PURE__ */ F("i", {}),
+						/* @__PURE__ */ F("i", {})
 					]
-				}) : /* @__PURE__ */ I("span", { className: "pk-seat__cardIdle" })
+				}) : /* @__PURE__ */ F("span", { className: "pk-seat__cardIdle" })
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-seat__person",
-				children: [/* @__PURE__ */ I(Z, {
+				children: [/* @__PURE__ */ F(X, {
 					avatarId: e.avatarId,
 					avatarUrl: e.avatarUrl,
 					className: "pk-seat__avatar"
-				}), /* @__PURE__ */ L("div", {
+				}), /* @__PURE__ */ I("div", {
 					className: "pk-seat__info",
-					children: [/* @__PURE__ */ L("p", {
+					children: [/* @__PURE__ */ I("p", {
 						className: "pk-seat__name",
 						title: e.name,
-						children: [e.name, r && /* @__PURE__ */ I("span", {
+						children: [e.name, r && /* @__PURE__ */ F("span", {
 							className: "pk-seat__you",
 							children: "you"
 						})]
-					}), /* @__PURE__ */ I("p", {
+					}), /* @__PURE__ */ F("p", {
 						className: "pk-seat__role",
 						children: i ? "♛ Moderator" : e.isOnline ? "Online" : "Offline"
 					})]
 				})]
 			}),
-			u && /* @__PURE__ */ I(K, {
+			u && /* @__PURE__ */ F(G, {
 				label: "Updating",
 				className: "pk-seat__pending"
 			}),
-			s && !u && /* @__PURE__ */ L("div", {
+			s && !u && /* @__PURE__ */ I("div", {
 				className: "pk-seat__manage",
-				children: [/* @__PURE__ */ I("button", {
+				children: [/* @__PURE__ */ F("button", {
 					type: "button",
 					className: "pk-seat__manageButton",
 					onClick: () => void l(e.id),
 					title: `Make ${e.name} the moderator`,
 					children: "♛"
-				}), /* @__PURE__ */ I("button", {
+				}), /* @__PURE__ */ F("button", {
 					type: "button",
 					className: "pk-seat__manageButton is-danger",
 					onClick: () => void c(e.id),
@@ -1172,26 +1231,26 @@ function Pe({ member: e, vote: t, issueId: n, isSelf: r, isRoomModerator: i, isV
 	});
 }
 // src/modules/poker/RoomClosedNotice.tsx
-function Fe({ reason: e, onExit: t }) {
-	return /* @__PURE__ */ I("div", {
+function Be({ reason: e, onExit: t }) {
+	return /* @__PURE__ */ F("div", {
 		className: "pk-closed",
-		children: /* @__PURE__ */ L("div", {
+		children: /* @__PURE__ */ I("div", {
 			className: "pk-closed__card",
 			children: [
-				/* @__PURE__ */ I("span", {
+				/* @__PURE__ */ F("span", {
 					className: "pk-closed__icon",
 					"aria-hidden": !0,
 					children: "🚪"
 				}),
-				/* @__PURE__ */ I("h1", {
+				/* @__PURE__ */ F("h1", {
 					className: "pk-closed__title",
 					children: "You are no longer in this room"
 				}),
-				/* @__PURE__ */ I("p", {
+				/* @__PURE__ */ F("p", {
 					className: "pk-closed__text",
 					children: e
 				}),
-				/* @__PURE__ */ I(A, {
+				/* @__PURE__ */ F(k, {
 					variant: "primary",
 					size: "md",
 					onClick: t,
@@ -1202,22 +1261,22 @@ function Fe({ reason: e, onExit: t }) {
 	});
 }
 // src/modules/poker/LeaveRoomDialog.tsx
-function Ie({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
-	let i = V((e) => e.members), a = V((e) => e.sid), o = T(() => i.filter((e) => e.id !== a), [i, a]), [s, c] = D(""), l = J(q.leave);
-	w(() => {
+function Ve({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
+	let i = B((e) => e.members), a = B((e) => e.sid), o = w(() => i.filter((e) => e.id !== a), [i, a]), [s, c] = E(""), l = q(K.leave);
+	C(() => {
 		e && c((e) => o.some((t) => t.id === e) ? e : o[0]?.id ?? "");
 	}, [e, o]);
 	let u = o.length > 0;
-	return /* @__PURE__ */ I(ee, {
+	return /* @__PURE__ */ F(te, {
 		isOpen: e,
 		onClose: () => {
 			l || t();
 		},
 		title: "Leave as host",
 		size: "sm",
-		footer: /* @__PURE__ */ I("div", {
+		footer: /* @__PURE__ */ F("div", {
 			className: "pk-leave__footer",
-			children: /* @__PURE__ */ I(A, {
+			children: /* @__PURE__ */ F(k, {
 				variant: "secondary",
 				layout: "plain",
 				onClick: t,
@@ -1225,22 +1284,22 @@ function Ie({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
 				label: "Cancel"
 			})
 		}),
-		children: /* @__PURE__ */ L("div", {
+		children: /* @__PURE__ */ I("div", {
 			className: "pk-leave",
-			children: [u && /* @__PURE__ */ L(F, { children: [/* @__PURE__ */ L("section", {
+			children: [u && /* @__PURE__ */ I(P, { children: [/* @__PURE__ */ I("section", {
 				className: "pk-leave__option",
 				children: [
-					/* @__PURE__ */ I("h4", {
+					/* @__PURE__ */ F("h4", {
 						className: "pk-leave__title",
 						children: "Hand over hosting"
 					}),
-					/* @__PURE__ */ I("p", {
+					/* @__PURE__ */ F("p", {
 						className: "pk-leave__text",
 						children: "The room stays open and the new host carries on with the estimates."
 					}),
-					/* @__PURE__ */ L("div", {
+					/* @__PURE__ */ I("div", {
 						className: "pk-leave__row",
-						children: [/* @__PURE__ */ I(N, {
+						children: [/* @__PURE__ */ F(M, {
 							id: "pk-successor",
 							className: "pk-leave__successor",
 							value: s,
@@ -1250,7 +1309,7 @@ function Ie({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
 								label: e.name
 							})),
 							ariaLabel: "New host"
-						}), /* @__PURE__ */ I(A, {
+						}), /* @__PURE__ */ F(k, {
 							variant: "primary",
 							onClick: () => n(s),
 							disabled: !s || l,
@@ -1258,24 +1317,24 @@ function Ie({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
 						})]
 					})
 				]
-			}), /* @__PURE__ */ I("div", {
+			}), /* @__PURE__ */ F("div", {
 				className: "pk-leave__divider",
 				role: "separator",
-				children: /* @__PURE__ */ I("span", { children: "or" })
-			})] }), /* @__PURE__ */ L("section", {
+				children: /* @__PURE__ */ F("span", { children: "or" })
+			})] }), /* @__PURE__ */ I("section", {
 				className: "pk-leave__option",
 				children: [
-					/* @__PURE__ */ I("h4", {
+					/* @__PURE__ */ F("h4", {
 						className: "pk-leave__title",
 						children: "Close the room"
 					}),
-					/* @__PURE__ */ I("p", {
+					/* @__PURE__ */ F("p", {
 						className: "pk-leave__text",
 						children: u ? "Everyone is sent out and every issue and estimate is removed." : "You are the only one here, so leaving closes the room and removes every issue and estimate."
 					}),
-					/* @__PURE__ */ I("div", {
+					/* @__PURE__ */ F("div", {
 						className: "pk-leave__row",
-						children: /* @__PURE__ */ I(A, {
+						children: /* @__PURE__ */ F(k, {
 							variant: "danger",
 							layout: "outlined",
 							onClick: r,
@@ -1289,7 +1348,7 @@ function Ie({ isOpen: e, onClose: t, onHandOver: n, onCloseRoom: r }) {
 	});
 }
 // src/modules/poker/RoomHeader.tsx
-var Le = {
+var He = {
 	idle: "Connecting",
 	connecting: "Connecting",
 	connected: "Live",
@@ -1297,70 +1356,70 @@ var Le = {
 	degraded: "Retrying",
 	closed: "Offline"
 };
-function Re({ onExit: e }) {
-	let t = V((e) => e.room), r = V(G), i = V((e) => e.connectionStatus), a = V((e) => e.membersMap[e.sid]), o = V((e) => e.members.length), s = V((e) => e.joinRequests.length), { host: c, userPicker: l, identity: u } = n(), { copyInviteLink: d, copyRoomCode: f, showIssuePanel: m, showJoinRequests: h, showInvitePanel: g, leaveRoom: _, closeRoom: v } = X(), [y, b] = D(!1), [x, S] = D(!1), C = E(null), T = r && c.capabilities.invitations && l !== null, O = r && (t?.access.requireApproval || s > 0);
-	w(() => {
-		if (!y) return;
+function Ue({ onExit: e }) {
+	let t = B((e) => e.room), r = B(W), i = B((e) => e.connectionStatus), a = B((e) => e.membersMap[e.sid]), o = B((e) => e.members.length), s = B((e) => e.joinRequests.length), { host: c, userPicker: l, identity: u } = n(), { copyInviteLink: d, copyRoomCode: f, showIssuePanel: m, showJoinRequests: h, showInvitePanel: ee, leaveRoom: g, closeRoom: _ } = Y(), [v, y] = E(!1), [b, x] = E(!1), S = T(null), w = r && c.capabilities.invitations && l !== null, D = r && (t?.access.requireApproval || s > 0);
+	C(() => {
+		if (!v) return;
 		let e = (e) => {
-			C.current?.contains(e.target) || b(!1);
+			S.current?.contains(e.target) || y(!1);
 		}, t = (e) => {
-			e.key === "Escape" && b(!1);
+			e.key === "Escape" && y(!1);
 		};
 		return document.addEventListener("mousedown", e), document.addEventListener("keydown", t), () => {
 			document.removeEventListener("mousedown", e), document.removeEventListener("keydown", t);
 		};
-	}, [y]);
-	let k = async (t) => {
-		await t() && (b(!1), S(!1), e());
-	}, j = async () => {
-		r ? (b(!1), S(!0)) : await k(() => _());
+	}, [v]);
+	let O = async (t) => {
+		await t() && (y(!1), x(!1), e());
+	}, A = async () => {
+		r ? (y(!1), x(!0)) : await O(() => g());
 	};
-	return /* @__PURE__ */ L("header", {
+	return /* @__PURE__ */ I("header", {
 		className: "pk-roomHeader",
 		children: [
-			/* @__PURE__ */ L("button", {
+			/* @__PURE__ */ I("button", {
 				type: "button",
 				className: "pk-roomHeader__iconButton",
 				onClick: m,
 				title: "Issues and settings",
-				children: [/* @__PURE__ */ I("span", {
+				children: [/* @__PURE__ */ F("span", {
 					"aria-hidden": !0,
 					children: "☰"
-				}), /* @__PURE__ */ I("span", {
+				}), /* @__PURE__ */ F("span", {
 					className: "pk-visually-hidden",
 					children: "Open issues and settings"
 				})]
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-roomHeader__identity",
-				children: [/* @__PURE__ */ I("h1", {
+				children: [/* @__PURE__ */ F("h1", {
 					className: "pk-roomHeader__name",
 					title: t?.roomName,
 					children: t?.roomName ?? "Planning Poker"
-				}), /* @__PURE__ */ L("div", {
+				}), /* @__PURE__ */ I("div", {
 					className: "pk-roomHeader__meta",
 					children: [
-						/* @__PURE__ */ L("button", {
+						/* @__PURE__ */ I("button", {
 							type: "button",
 							className: "pk-roomHeader__code",
 							onClick: f,
 							title: "Copy room code",
-							children: [/* @__PURE__ */ I("span", {
+							children: [/* @__PURE__ */ F("span", {
 								className: "pk-roomHeader__codeValue",
 								children: t?.roomId
-							}), /* @__PURE__ */ I("span", {
+							}), /* @__PURE__ */ F("span", {
 								"aria-hidden": !0,
 								children: "⧉"
 							})]
 						}),
-						/* @__PURE__ */ L("span", {
+						/* @__PURE__ */ I("span", {
 							className: `pk-roomHeader__status is-${i}`,
-							children: [/* @__PURE__ */ I("span", {
+							children: [/* @__PURE__ */ F("span", {
 								className: "pk-roomHeader__statusDot",
 								"aria-hidden": !0
-							}), Le[i] ?? i]
+							}), He[i] ?? i]
 						}),
-						/* @__PURE__ */ L("span", {
+						/* @__PURE__ */ I("span", {
 							className: "pk-roomHeader__count",
 							children: [
 								o,
@@ -1371,24 +1430,24 @@ function Re({ onExit: e }) {
 					]
 				})]
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-roomHeader__actions",
 				children: [
-					O && /* @__PURE__ */ I(A, {
+					D && /* @__PURE__ */ F(k, {
 						variant: s > 0 ? "primary" : "secondary",
 						layout: "outlined",
 						size: "sm",
 						onClick: h,
 						label: s > 0 ? `Requests (${s})` : "Requests"
 					}),
-					T && /* @__PURE__ */ I(A, {
+					w && /* @__PURE__ */ F(k, {
 						variant: "secondary",
 						layout: "outlined",
 						size: "sm",
-						onClick: g,
+						onClick: ee,
 						label: "Invite people"
 					}),
-					/* @__PURE__ */ I(A, {
+					/* @__PURE__ */ F(k, {
 						variant: "secondary",
 						layout: "outlined",
 						size: "sm",
@@ -1396,63 +1455,63 @@ function Re({ onExit: e }) {
 						label: "Copy link",
 						className: "pk-roomHeader__invite"
 					}),
-					/* @__PURE__ */ I(p, {}),
-					/* @__PURE__ */ L("div", {
+					/* @__PURE__ */ F(p, {}),
+					/* @__PURE__ */ I("div", {
 						className: "pk-roomHeader__user",
-						ref: C,
-						children: [/* @__PURE__ */ L("button", {
+						ref: S,
+						children: [/* @__PURE__ */ I("button", {
 							type: "button",
 							className: "pk-roomHeader__avatarButton",
-							onClick: () => b((e) => !e),
-							"aria-expanded": y,
+							onClick: () => y((e) => !e),
+							"aria-expanded": v,
 							"aria-haspopup": "menu",
 							title: "Your profile",
-							children: [/* @__PURE__ */ I(Z, {
+							children: [/* @__PURE__ */ F(X, {
 								avatarId: a?.avatarId,
 								avatarUrl: a?.avatarUrl,
 								className: "pk-roomHeader__avatar"
-							}), r && /* @__PURE__ */ I("span", {
+							}), r && /* @__PURE__ */ F("span", {
 								className: "pk-roomHeader__crown",
 								title: "Moderator",
 								"aria-label": "Moderator",
 								children: "♛"
 							})]
-						}), y && /* @__PURE__ */ L("div", {
+						}), v && /* @__PURE__ */ I("div", {
 							className: "pk-roomHeader__menu",
 							role: "menu",
 							children: [
-								/* @__PURE__ */ L("div", {
+								/* @__PURE__ */ I("div", {
 									className: "pk-roomHeader__menuHead",
-									children: [/* @__PURE__ */ I("p", {
+									children: [/* @__PURE__ */ F("p", {
 										className: "pk-roomHeader__menuRole",
 										children: r ? "Moderator" : "Player"
-									}), /* @__PURE__ */ I("p", {
+									}), /* @__PURE__ */ F("p", {
 										className: "pk-roomHeader__menuName",
 										children: a?.name ?? "You"
 									})]
 								}),
-								u.allowsAvatarPicker && /* @__PURE__ */ I("div", {
+								u.allowsAvatarPicker && /* @__PURE__ */ F("div", {
 									className: "pk-roomHeader__menuBody",
-									children: /* @__PURE__ */ I(ze, {
+									children: /* @__PURE__ */ F(We, {
 										currentAvatarId: a?.avatarId ?? null,
 										profileImageUrl: a?.avatarUrl
 									})
 								}),
-								/* @__PURE__ */ I("div", {
+								/* @__PURE__ */ F("div", {
 									className: "pk-roomHeader__menuFoot",
-									children: r ? /* @__PURE__ */ I(A, {
+									children: r ? /* @__PURE__ */ F(k, {
 										variant: "danger",
 										layout: "plain",
 										size: "sm",
 										fullWidth: !0,
-										onClick: j,
+										onClick: A,
 										label: "Leave or close room"
-									}) : /* @__PURE__ */ I(A, {
+									}) : /* @__PURE__ */ F(k, {
 										variant: "danger",
 										layout: "plain",
 										size: "sm",
 										fullWidth: !0,
-										onClick: j,
+										onClick: A,
 										label: "Leave room",
 										confirmText: "Leave this room? Your estimates will be discarded.",
 										confirmTitle: "Leave room"
@@ -1463,35 +1522,35 @@ function Re({ onExit: e }) {
 					})
 				]
 			}),
-			/* @__PURE__ */ I(Ie, {
-				isOpen: x,
-				onClose: () => S(!1),
-				onHandOver: (e) => k(() => _(e)),
-				onCloseRoom: () => k(() => v())
+			/* @__PURE__ */ F(Ve, {
+				isOpen: b,
+				onClose: () => x(!1),
+				onHandOver: (e) => O(() => g(e)),
+				onCloseRoom: () => O(() => _())
 			})
 		]
 	});
 }
-function ze({ currentAvatarId: e, profileImageUrl: t }) {
-	let { setAvatar: n } = X(), r = J(q.avatar);
-	return /* @__PURE__ */ L("div", {
+function We({ currentAvatarId: e, profileImageUrl: t }) {
+	let { setAvatar: n } = Y(), r = q(K.avatar);
+	return /* @__PURE__ */ I("div", {
 		className: "pk-roomHeader__avatarPicker",
-		children: [/* @__PURE__ */ I(y, {
+		children: [/* @__PURE__ */ F(v, {
 			value: e,
 			onChange: (e) => void n(e),
 			className: "pk-roomHeader__avatarGrid",
 			profileImageUrl: t
-		}), r && /* @__PURE__ */ I(K, {
+		}), r && /* @__PURE__ */ F(G, {
 			label: "Saving",
 			className: "pk-roomHeader__avatarSaving"
 		})]
 	});
 }
 // src/modules/poker/EstimateSync.tsx
-function Be({ room: e, issue: t, vote: n }) {
-	let r = V(G), a = V((e) => e.estimateTarget);
+function Ge({ room: e, issue: t, vote: n }) {
+	let r = B(W), a = B((e) => e.estimateTarget);
 	if (!n.reveal || !t.root || !l(e.scoreType)) return null;
-	let o = n.syncedScore === void 0 ? null : /* @__PURE__ */ L("span", {
+	let o = n.syncedScore === void 0 ? null : /* @__PURE__ */ I("span", {
 		className: "pk-estimateSync__saved",
 		children: [
 			"✓ ",
@@ -1499,19 +1558,19 @@ function Be({ room: e, issue: t, vote: n }) {
 			" saved in Jira"
 		]
 	});
-	if (!r || a === null) return o && /* @__PURE__ */ I("div", {
+	if (!r || a === null) return o && /* @__PURE__ */ F("div", {
 		className: "pk-estimateSync",
 		children: o
 	});
-	if (!a.ready) return /* @__PURE__ */ I("div", {
+	if (!a.ready) return /* @__PURE__ */ F("div", {
 		className: "pk-estimateSync",
-		children: /* @__PURE__ */ I("span", {
+		children: /* @__PURE__ */ F("span", {
 			className: "pk-estimateSync__hint",
 			children: a.reason
 		})
 	});
 	let s = i(n.finalScore) ? n.finalScore : void 0, c = i(n.syncedScore) ? n.syncedScore : s;
-	return /* @__PURE__ */ I(Ve, {
+	return /* @__PURE__ */ F(Ke, {
 		room: e,
 		issueId: t.id,
 		fieldName: a.fieldName,
@@ -1519,20 +1578,20 @@ function Be({ room: e, issue: t, vote: n }) {
 		synced: o
 	}, `${t.id}:${c ?? ""}`);
 }
-function Ve({ room: e, issueId: t, fieldName: n, initial: r, synced: a }) {
-	let [s, c] = D(r), l = J(q.estimate(t)), { saveEstimate: u } = X(), d = o(e.scoreType, e.settings.maxPoints, e.settings.showHalfScore).filter(i), f = (r === void 0 || d.includes(r) ? d : [...d, r].sort((e, t) => e - t)).map((e) => ({
+function Ke({ room: e, issueId: t, fieldName: n, initial: r, synced: a }) {
+	let [s, c] = E(r), l = q(K.estimate(t)), { saveEstimate: u } = Y(), d = o(e.scoreType, e.settings.maxPoints, e.settings.showHalfScore).filter(i), f = (r === void 0 || d.includes(r) ? d : [...d, r].sort((e, t) => e - t)).map((e) => ({
 		value: e,
 		label: String(e)
 	}));
-	return /* @__PURE__ */ L("div", {
+	return /* @__PURE__ */ I("div", {
 		className: "pk-estimateSync",
 		children: [
-			/* @__PURE__ */ I("label", {
+			/* @__PURE__ */ F("label", {
 				className: "pk-estimateSync__label",
 				htmlFor: `pk-estimate-${t}`,
 				children: n
 			}),
-			/* @__PURE__ */ I(N, {
+			/* @__PURE__ */ F(M, {
 				id: `pk-estimate-${t}`,
 				className: "pk-estimateSync__value",
 				value: s,
@@ -1541,7 +1600,7 @@ function Ve({ room: e, issueId: t, fieldName: n, initial: r, synced: a }) {
 				disabled: l,
 				onChange: (e) => c(Number(e.value))
 			}),
-			/* @__PURE__ */ I(A, {
+			/* @__PURE__ */ F(k, {
 				size: "sm",
 				variant: "primary",
 				label: "Update in Jira",
@@ -1556,15 +1615,15 @@ function Ve({ room: e, issueId: t, fieldName: n, initial: r, synced: a }) {
 	});
 }
 // src/modules/poker/IssueNavigator.tsx
-function He() {
-	let e = V((e) => e.room?.issues), t = V((e) => e.viewingIssueId), { selectIssue: n, showIssuePanel: r } = X();
+function qe() {
+	let e = B((e) => e.room?.issues), t = B((e) => e.viewingIssueId), { selectIssue: n, showIssuePanel: r } = Y();
 	if (!e || e.length < 2) return null;
 	let i = e.findIndex((e) => e.id === t), a = i > 0 ? e[i - 1] : void 0, o = i >= 0 && i < e.length - 1 ? e[i + 1] : void 0;
-	return /* @__PURE__ */ L("nav", {
+	return /* @__PURE__ */ I("nav", {
 		className: "pk-issueNav",
 		"aria-label": "Move between issues",
 		children: [
-			/* @__PURE__ */ I("button", {
+			/* @__PURE__ */ F("button", {
 				type: "button",
 				className: "pk-issueNav__step",
 				onClick: () => a && n(a.id),
@@ -1573,14 +1632,14 @@ function He() {
 				"aria-label": "Previous issue",
 				children: "‹"
 			}),
-			/* @__PURE__ */ I("button", {
+			/* @__PURE__ */ F("button", {
 				type: "button",
 				className: "pk-issueNav__position",
 				onClick: r,
 				title: "Open the backlog",
 				children: i >= 0 ? `${i + 1} / ${e.length}` : `– / ${e.length}`
 			}),
-			/* @__PURE__ */ I("button", {
+			/* @__PURE__ */ F("button", {
 				type: "button",
 				className: "pk-issueNav__step",
 				onClick: () => o && n(o.id),
@@ -1593,7 +1652,7 @@ function He() {
 	});
 }
 // src/modules/poker/RoundStage.tsx
-var Ue = {
+var Je = {
 	idle: {
 		label: "No round in progress",
 		tone: "neutral"
@@ -1607,39 +1666,39 @@ var Ue = {
 		tone: "success"
 	}
 };
-function We() {
-	let e = V((e) => e.room), t = V((e) => e.viewingIssueId), n = V((e) => e.viewingIssueId ? e.issuesMap[e.viewingIssueId] : void 0), r = V((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), i = V((e) => e.members), a = V(G), { startRound: o, restartRound: s, revealVotes: c, showIssuePanel: l } = X(), u = !!t && t === e?.currentIssueId, d = !!r?.reveal, f = d ? "revealed" : u ? "voting" : "idle", p = u ? i.filter((e) => e.votedIssueIds.includes(t)).length : 0, m = i.length, h = m > 0 ? Math.round(p / m * 100) : 0;
-	return /* @__PURE__ */ L("section", {
+function Ye() {
+	let e = B((e) => e.room), t = B((e) => e.viewingIssueId), n = B((e) => e.viewingIssueId ? e.issuesMap[e.viewingIssueId] : void 0), r = B((e) => e.viewingIssueId ? e.votesMap[e.viewingIssueId] : void 0), i = B((e) => e.members), a = B(W), { startRound: o, restartRound: s, revealVotes: c, showIssuePanel: l } = Y(), u = !!t && t === e?.currentIssueId, d = !!r?.reveal, f = d ? "revealed" : u ? "voting" : "idle", p = u ? i.filter((e) => e.votedIssueIds.includes(t)).length : 0, m = i.length, h = m > 0 ? Math.round(p / m * 100) : 0;
+	return /* @__PURE__ */ I("section", {
 		className: "pk-stage",
 		children: [
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-stage__head",
-				children: [/* @__PURE__ */ L("div", {
+				children: [/* @__PURE__ */ I("div", {
 					className: "pk-stage__lead",
-					children: [/* @__PURE__ */ L("span", {
-						className: `pk-stage__status is-${Ue[f].tone}`,
-						children: [/* @__PURE__ */ I("span", {
+					children: [/* @__PURE__ */ I("span", {
+						className: `pk-stage__status is-${Je[f].tone}`,
+						children: [/* @__PURE__ */ F("span", {
 							className: "pk-stage__statusDot",
 							"aria-hidden": !0
-						}), Ue[f].label]
-					}), /* @__PURE__ */ I(He, {})]
-				}), a && /* @__PURE__ */ L("div", {
+						}), Je[f].label]
+					}), /* @__PURE__ */ F(qe, {})]
+				}), a && /* @__PURE__ */ I("div", {
 					className: "pk-stage__controls",
 					children: [
-						!u && /* @__PURE__ */ I(A, {
+						!u && /* @__PURE__ */ F(k, {
 							variant: "success",
 							size: "sm",
 							onClick: o,
 							disabled: !t,
 							label: "Start round"
 						}),
-						u && !d && /* @__PURE__ */ I(A, {
+						u && !d && /* @__PURE__ */ F(k, {
 							variant: "primary",
 							size: "sm",
 							onClick: c,
 							label: "Reveal votes"
 						}),
-						u && /* @__PURE__ */ I(A, {
+						u && /* @__PURE__ */ F(k, {
 							variant: "warning",
 							layout: "outlined",
 							size: "sm",
@@ -1651,36 +1710,36 @@ function We() {
 					]
 				})]
 			}),
-			n ? /* @__PURE__ */ L("div", {
+			n ? /* @__PURE__ */ I("div", {
 				className: "pk-stage__issue",
-				children: [/* @__PURE__ */ L("div", {
+				children: [/* @__PURE__ */ I("div", {
 					className: "pk-stage__issueKey",
-					children: [n.icon && /* @__PURE__ */ I("img", {
+					children: [n.icon && /* @__PURE__ */ F("img", {
 						src: n.icon,
 						alt: "",
 						className: "pk-stage__issueIcon"
-					}), n.url ? /* @__PURE__ */ I("a", {
+					}), n.url ? /* @__PURE__ */ F("a", {
 						href: n.url,
 						target: "_blank",
 						rel: "noopener noreferrer",
 						children: n.key
-					}) : /* @__PURE__ */ I("span", { children: n.key })]
-				}), n.summary && /* @__PURE__ */ I("p", {
+					}) : /* @__PURE__ */ F("span", { children: n.key })]
+				}), n.summary && /* @__PURE__ */ F("p", {
 					className: "pk-stage__issueSummary",
 					children: n.summary
 				})]
-			}) : /* @__PURE__ */ L("div", {
+			}) : /* @__PURE__ */ I("div", {
 				className: "pk-stage__empty",
 				children: [
-					/* @__PURE__ */ I("p", {
+					/* @__PURE__ */ F("p", {
 						className: "pk-stage__emptyTitle",
 						children: "No issue selected"
 					}),
-					/* @__PURE__ */ I("p", {
+					/* @__PURE__ */ F("p", {
 						className: "pk-stage__emptyText",
 						children: a ? "Add an issue from the issues panel to start estimating." : "Waiting for the moderator to add an issue."
 					}),
-					/* @__PURE__ */ I(A, {
+					/* @__PURE__ */ F(k, {
 						variant: "secondary",
 						layout: "outlined",
 						size: "sm",
@@ -1689,42 +1748,42 @@ function We() {
 					})
 				]
 			}),
-			/* @__PURE__ */ L("div", {
+			/* @__PURE__ */ I("div", {
 				className: "pk-stage__stats",
 				children: [
-					/* @__PURE__ */ I(Q, {
+					/* @__PURE__ */ F(Z, {
 						label: "Final",
 						value: d && r?.finalScore !== void 0 ? String(r.finalScore) : "—",
 						accent: !0
 					}),
-					/* @__PURE__ */ I(Q, {
+					/* @__PURE__ */ F(Z, {
 						label: "Average",
 						value: d && r?.average !== void 0 ? r.average.toFixed(1) : "—"
 					}),
-					/* @__PURE__ */ I(Q, {
+					/* @__PURE__ */ F(Z, {
 						label: "Highest",
 						value: d && r?.maxVote !== void 0 ? String(r.maxVote) : "—"
 					}),
-					/* @__PURE__ */ I(Q, {
+					/* @__PURE__ */ F(Z, {
 						label: "Voted",
 						value: u ? `${p}/${m}` : "—"
 					})
 				]
 			}),
-			e && n && r && /* @__PURE__ */ I(Be, {
+			e && n && r && /* @__PURE__ */ F(Ge, {
 				room: e,
 				issue: n,
 				vote: r
 			}),
-			u && /* @__PURE__ */ L("div", {
+			u && /* @__PURE__ */ I("div", {
 				className: "pk-stage__progress",
-				children: [/* @__PURE__ */ I("div", {
+				children: [/* @__PURE__ */ F("div", {
 					className: "pk-stage__progressTrack",
-					children: /* @__PURE__ */ I("div", {
+					children: /* @__PURE__ */ F("div", {
 						className: `pk-stage__progressFill ${d ? "is-revealed" : ""}`,
 						style: { width: `${h}%` }
 					})
-				}), /* @__PURE__ */ L("span", {
+				}), /* @__PURE__ */ I("span", {
 					className: "pk-stage__progressLabel",
 					children: [h, "% voted"]
 				})]
@@ -1732,30 +1791,30 @@ function We() {
 		]
 	});
 }
-function Q({ label: e, value: t, accent: n = !1 }) {
-	return /* @__PURE__ */ L("div", {
+function Z({ label: e, value: t, accent: n = !1 }) {
+	return /* @__PURE__ */ I("div", {
 		className: `pk-stat ${n ? "is-accent" : ""}`,
-		children: [/* @__PURE__ */ I("span", {
+		children: [/* @__PURE__ */ F("span", {
 			className: "pk-stat__label",
 			children: e
-		}), /* @__PURE__ */ I("span", {
+		}), /* @__PURE__ */ F("span", {
 			className: "pk-stat__value",
 			children: t
 		})]
 	});
 }
 // src/modules/poker/useAutoRevealCatchUp.ts
-var Ge = 1500;
-function Ke() {
-	let { revealVotes: e } = X(), t = E(/* @__PURE__ */ new Set()), n = V(G), r = V((e) => e.room?.settings.autoReveal ?? !1), i = V((e) => e.room?.currentIssueId ?? null), a = V((e) => e.room?.currentIssueId ? !!e.votesMap[e.room.currentIssueId]?.reveal : !1), o = V((e) => {
+var Xe = 1500;
+function Ze() {
+	let { revealVotes: e } = Y(), t = T(/* @__PURE__ */ new Set()), n = B(W), r = B((e) => e.room?.settings.autoReveal ?? !1), i = B((e) => e.room?.currentIssueId ?? null), a = B((e) => e.room?.currentIssueId ? !!e.votesMap[e.room.currentIssueId]?.reveal : !1), o = B((e) => {
 		let t = e.room?.currentIssueId;
 		return !!t && e.members.length > 0 && e.members.every((e) => e.votedIssueIds.includes(t));
 	});
-	w(() => {
+	C(() => {
 		if (!n || !r || i === null || a || !o || t.current.has(i)) return;
 		let s = setTimeout(() => {
 			t.current.add(i), e();
-		}, Ge);
+		}, Xe);
 		return () => clearTimeout(s);
 	}, [
 		n,
@@ -1767,22 +1826,22 @@ function Ke() {
 	]);
 }
 // src/modules/poker/useEstimateSync.ts
-function qe() {
-	let { issues: e } = n(), { saveEstimate: t } = X(), r = E(/* @__PURE__ */ new Set()), i = V(G), a = V((e) => e.estimateTarget), o = V((e) => e.room?.settings.estimateSync ?? "manual"), s = V((e) => e.room?.scoreType), c = V((e) => e.room?.currentIssueId ? e.issuesMap[e.room.currentIssueId] : void 0), u = V((e) => e.room?.currentIssueId ? e.votesMap[e.room.currentIssueId] : void 0);
-	w(() => {
+function Qe() {
+	let { issues: e } = n(), { saveEstimate: t } = Y(), r = T(/* @__PURE__ */ new Set()), i = B(W), a = B((e) => e.estimateTarget), o = B((e) => e.room?.settings.estimateSync ?? "manual"), s = B((e) => e.room?.scoreType), c = B((e) => e.room?.currentIssueId ? e.issuesMap[e.room.currentIssueId] : void 0), u = B((e) => e.room?.currentIssueId ? e.votesMap[e.room.currentIssueId] : void 0);
+	C(() => {
 		if (!i || e === null) {
-			H({ estimateTarget: null });
+			V({ estimateTarget: null });
 			return;
 		}
 		let t = !0;
 		return e.getEstimateTarget().then((e) => {
-			t && H({ estimateTarget: e });
+			t && V({ estimateTarget: e });
 		}).catch((e) => {
-			console.error("Could not check where estimates are saved", e), t && H({ estimateTarget: null });
+			console.error("Could not check where estimates are saved", e), t && V({ estimateTarget: null });
 		}), () => {
 			t = !1;
 		};
-	}, [i, e]), w(() => {
+	}, [i, e]), C(() => {
 		if (!i || !a?.ready || s === void 0 || !l(s) || !c?.root || !u || u.syncedScore !== void 0 || r.current.has(u.issueId)) return;
 		let e = d(o, u);
 		e !== void 0 && (r.current.add(u.issueId), t(u.issueId, e));
@@ -1797,20 +1856,20 @@ function qe() {
 	]);
 }
 // src/modules/poker/presence.ts
-function Je(e, t, n, r) {
+function $e(e, t, n, r) {
 	return e.filter((e) => {
 		if (!e.isOnline || e.id === r || !e.lastSeenAt) return !1;
 		let i = Date.parse(e.lastSeenAt);
 		return Number.isFinite(i) && t - i > n;
 	}).map((e) => e.id);
 }
-function Ye(e, t) {
+function et(e, t) {
 	if (!e) return null;
 	let n = Date.parse(e);
 	return Number.isFinite(n) ? n - t : null;
 }
 // src/modules/poker/revision.ts
-function Xe(e, t) {
+function tt(e, t) {
 	return t === void 0 ? {
 		apply: !0,
 		resync: !1,
@@ -1826,34 +1885,34 @@ function Xe(e, t) {
 	};
 }
 // src/modules/poker/roomEvents.ts
-var Ze = "RATE_LIMITED", Qe = /* @__PURE__ */ new Set([
+var nt = "RATE_LIMITED", rt = /* @__PURE__ */ new Set([
 	"submitVote",
 	"revealVotes",
 	"startRound",
 	"restartRound"
-]), $e = /* @__PURE__ */ new Set([
+]), it = /* @__PURE__ */ new Set([
 	"roomState",
 	"heartbeatResult",
 	"ack"
 ]);
-function $(e, t) {
+function Q(e, t) {
 	return {
 		members: t,
-		membersMap: W(t),
-		offlineSince: le(t, e.offlineSince, Date.now(), e.serverOffsetMs)
+		membersMap: U(t),
+		offlineSince: ue(t, e.offlineSince, Date.now(), e.serverOffsetMs)
 	};
 }
-function et(e, t) {
-	let n = e.viewingIssueId !== null && t.room.issues.some((t) => t.id === e.viewingIssueId) ? e.viewingIssueId : t.room.currentIssueId ?? t.room.issues[0]?.id ?? null, r = Ye(t.serverTime, Date.now()) ?? e.serverOffsetMs;
+function at(e, t) {
+	let n = e.viewingIssueId !== null && t.room.issues.some((t) => t.id === e.viewingIssueId) ? e.viewingIssueId : t.room.currentIssueId ?? t.room.issues[0]?.id ?? null, r = et(t.serverTime, Date.now()) ?? e.serverOffsetMs;
 	return {
 		room: t.room,
 		members: t.members,
-		membersMap: W(t.members),
-		issuesMap: W(t.room.issues),
-		votesMap: ce(t.votes),
+		membersMap: U(t.members),
+		issuesMap: U(t.room.issues),
+		votesMap: le(t.votes),
 		onlineIds: t.members.filter((e) => e.isOnline).map((e) => e.id),
 		serverOffsetMs: r,
-		offlineSince: le(t.members, e.offlineSince, Date.now(), r),
+		offlineSince: ue(t.members, e.offlineSince, Date.now(), r),
 		joinRequests: t.joinRequests ?? [],
 		invitations: t.invitations ?? [],
 		lastRevision: t.room.revision ?? 0,
@@ -1864,22 +1923,22 @@ function et(e, t) {
 		isLoaded: !0
 	};
 }
-function tt(e, t) {
+function $(e, t) {
 	let n = new Map(e.members.map((e) => [e.id, e]));
 	for (let e of t) n.set(e.id, e);
 	return [...n.values()];
 }
-function nt(e, t, n = e.members) {
+function ot(e, t, n = e.members) {
 	let r = new Set(t);
 	return {
 		onlineIds: t,
-		...$(e, n.map((e) => ({
+		...Q(e, n.map((e) => ({
 			...e,
 			isOnline: r.has(e.id)
 		})))
 	};
 }
-function rt(e, t) {
+function st(e, t) {
 	let n = e.votesMap[t.issueId], r = t.reveal ? t : {
 		...t,
 		values: {
@@ -1892,17 +1951,17 @@ function rt(e, t) {
 		[t.issueId]: r
 	} };
 }
-function it(e, t) {
+function ct(e, t) {
 	let n = new Set(t.votedIds), r = !1, i = e.members.map((e) => !n.has(e.id) || e.votedIssueIds.includes(t.issueId) ? e : (r = !0, {
 		...e,
 		votedIssueIds: [...e.votedIssueIds, t.issueId]
 	}));
 	return r ? {
 		members: i,
-		membersMap: W(i)
+		membersMap: U(i)
 	} : {};
 }
-function at(e, t) {
+function lt(e, t) {
 	if (e.room === null) return {};
 	let n = e.viewingIssueId !== null && t.issues.some((t) => t.id === e.viewingIssueId) ? e.viewingIssueId : t.currentIssueId ?? t.issues[0]?.id ?? null;
 	return {
@@ -1911,11 +1970,11 @@ function at(e, t) {
 			issues: t.issues,
 			currentIssueId: t.currentIssueId
 		},
-		issuesMap: W(t.issues),
+		issuesMap: U(t.issues),
 		viewingIssueId: n
 	};
 }
-function ot(e, t) {
+function ut(e, t) {
 	if (e.room === null) return {};
 	let n = e.members.map((e) => ({
 		...e,
@@ -1927,9 +1986,9 @@ function ot(e, t) {
 			issues: t.issues,
 			currentIssueId: t.currentIssueId
 		},
-		issuesMap: W(t.issues),
+		issuesMap: U(t.issues),
 		members: n,
-		membersMap: W(n),
+		membersMap: U(n),
 		votesMap: {
 			...e.votesMap,
 			[t.vote.issueId]: t.vote
@@ -1937,7 +1996,7 @@ function ot(e, t) {
 		viewingIssueId: t.currentIssueId
 	};
 }
-function st(e, t, n) {
+function dt(e, t, n) {
 	return e.joinRequests.some((e) => e.requestId === t.request.requestId) ? {
 		patch: {},
 		effects: []
@@ -1946,7 +2005,7 @@ function st(e, t, n) {
 		effects: [() => n.message.info(`${t.request.name} wants to join the room`)]
 	};
 }
-function ct(e, t, n) {
+function ft(e, t, n) {
 	let r = new Set(t.requestIds), i = e.joinRequests.filter((e) => !r.has(e.requestId)), { bulkJoinAction: a, bulkDisableApproval: o } = e;
 	return a === null ? {
 		patch: { joinRequests: i },
@@ -1963,15 +2022,15 @@ function ct(e, t, n) {
 		effects: []
 	};
 }
-function lt(e, t, n) {
-	let r = Ye(t.serverTime, Date.now()) ?? e.serverOffsetMs, i = t.lastSeen, a = i ? e.members.map((e) => i[e.id] ? {
+function pt(e, t, n) {
+	let r = et(t.serverTime, Date.now()) ?? e.serverOffsetMs, i = t.lastSeen, a = i ? e.members.map((e) => i[e.id] ? {
 		...e,
 		lastSeenAt: i[e.id]
 	} : e) : e.members, o = t.revision > e.lastRevision || e.room !== null && e.room.moderatorId === e.sid && t.pendingJoinRequests !== e.joinRequests.length;
 	return {
 		patch: {
 			serverOffsetMs: r,
-			...nt({
+			...ot({
 				...e,
 				serverOffsetMs: r
 			}, t.onlineIds, a)
@@ -1979,14 +2038,14 @@ function lt(e, t, n) {
 		effects: o ? [n.resync] : []
 	};
 }
-function ut(e, t, n) {
+function mt(e, t, n) {
 	let r = [];
-	if (t?.code === Ze) r.push(() => n.message.error(_));
+	if (t?.code === nt) r.push(() => n.message.error(g));
 	else if (t?.message) {
 		let e = t.message;
 		r.push(() => n.message.error(e));
 	}
-	return (t?.code === Ze || t?.action && Qe.has(t.action)) && r.push(n.resync), {
+	return (t?.code === nt || t?.action && rt.has(t.action)) && r.push(n.resync), {
 		patch: e.bulkJoinAction === null ? {} : {
 			bulkJoinAction: null,
 			bulkDisableApproval: !1
@@ -1994,7 +2053,7 @@ function ut(e, t, n) {
 		effects: r
 	};
 }
-function dt(e, t, n) {
+function ht(e, t, n) {
 	if (e.room === null) return {
 		patch: {},
 		effects: []
@@ -2013,7 +2072,7 @@ function dt(e, t, n) {
 		effects: r === "mod" ? [n.resync] : []
 	};
 }
-function ft(e, t, n) {
+function gt(e, t, n) {
 	let r = [];
 	switch (t.action) {
 		case "authResult": {
@@ -2024,7 +2083,7 @@ function ft(e, t, n) {
 			};
 		}
 		case "roomState": return {
-			patch: et(e, t.payload),
+			patch: at(e, t.payload),
 			effects: r
 		};
 		case "roomUpdated": return {
@@ -2037,57 +2096,57 @@ function ft(e, t, n) {
 		case "memberJoined": {
 			let r = t.payload.member;
 			return {
-				patch: $(e, tt(e, [r])),
+				patch: Q(e, $(e, [r])),
 				effects: [() => n.message.info(`${r.name} joined the room`)]
 			};
 		}
 		case "membersJoined": return {
-			patch: $(e, tt(e, t.payload.members)),
+			patch: Q(e, $(e, t.payload.members)),
 			effects: r
 		};
 		case "memberUpdated": return {
-			patch: $(e, tt(e, [t.payload.member])),
+			patch: Q(e, $(e, [t.payload.member])),
 			effects: r
 		};
 		case "memberLeft": {
 			let n = t.payload.sid;
 			return {
-				patch: $(e, e.members.filter((e) => e.id !== n)),
+				patch: Q(e, e.members.filter((e) => e.id !== n)),
 				effects: r
 			};
 		}
 		case "presenceUpdate": return {
-			patch: nt(e, t.payload.onlineIds),
+			patch: ot(e, t.payload.onlineIds),
 			effects: r
 		};
-		case "heartbeatResult": return lt(e, t.payload, n);
+		case "heartbeatResult": return pt(e, t.payload, n);
 		case "issuesUpdated": return {
-			patch: at(e, t.payload),
+			patch: lt(e, t.payload),
 			effects: r
 		};
 		case "roundStarted": return {
-			patch: ot(e, t.payload),
+			patch: ut(e, t.payload),
 			effects: r
 		};
 		case "voteProgress": return {
-			patch: it(e, t.payload),
+			patch: ct(e, t.payload),
 			effects: r
 		};
 		case "voteUpdated": return {
-			patch: rt(e, t.payload.vote),
+			patch: st(e, t.payload.vote),
 			effects: r
 		};
 		case "votesRevealed": return {
-			patch: rt(e, t.payload.vote),
+			patch: st(e, t.payload.vote),
 			effects: r
 		};
-		case "joinRequested": return st(e, t.payload, n);
-		case "joinRequestResolved": return ct(e, t.payload, n);
+		case "joinRequested": return dt(e, t.payload, n);
+		case "joinRequestResolved": return ft(e, t.payload, n);
 		case "invitationsUpdated": return {
 			patch: { invitations: t.payload.invitations },
 			effects: r
 		};
-		case "moderatorChanged": return dt(e, t.payload, n);
+		case "moderatorChanged": return ht(e, t.payload, n);
 		case "kicked":
 		case "roomClosed": return {
 			patch: { closedReason: t.payload.reason },
@@ -2097,21 +2156,21 @@ function ft(e, t, n) {
 			patch: { closedReason: "You joined this room from another tab or device." },
 			effects: r
 		};
-		case "error": return ut(e, t.payload, n);
+		case "error": return mt(e, t.payload, n);
 		default: return {
 			patch: {},
 			effects: r
 		};
 	}
 }
-function pt(e, t, n) {
-	if ($e.has(t.action)) return ft(e, t, n);
-	let r = Xe(e.lastRevision, t.revision);
+function _t(e, t, n) {
+	if (it.has(t.action)) return gt(e, t, n);
+	let r = tt(e.lastRevision, t.revision);
 	if (!r.apply) return {
 		patch: {},
 		effects: []
 	};
-	let i = ft({
+	let i = gt({
 		...e,
 		lastRevision: r.last
 	}, t, n);
@@ -2123,19 +2182,19 @@ function pt(e, t, n) {
 		effects: r.resync ? [n.resync, ...i.effects] : i.effects
 	};
 }
-function mt(e, t) {
+function vt(e, t) {
 	let n = [];
-	U((r) => {
-		let i = pt(r, e, t);
+	H((r) => {
+		let i = _t(r, e, t);
 		return n = i.effects, i.patch;
 	}, () => n.forEach((e) => e()));
 }
-function ht() {
-	U((e) => {
-		let t = new Set(Je(e.members, Date.now() + e.serverOffsetMs, f, e.sid));
+function yt() {
+	H((e) => {
+		let t = new Set($e(e.members, Date.now() + e.serverOffsetMs, f, e.sid));
 		return t.size === 0 ? {} : {
 			onlineIds: e.onlineIds.filter((e) => !t.has(e)),
-			...$(e, e.members.map((e) => t.has(e.id) ? {
+			...Q(e, e.members.map((e) => t.has(e.id) ? {
 				...e,
 				isOnline: !1
 			} : e))
@@ -2143,9 +2202,9 @@ function ht() {
 	});
 }
 // src/modules/poker/useRoomConnection.ts
-function gt(e, t) {
+function bt(e, t) {
 	let { realtime: r, message: i, host: a } = n(), o = a.capabilities.presenceHeartbeat;
-	w(() => {
+	C(() => {
 		if (!t || !e) return;
 		let n = null, a = {
 			message: i,
@@ -2157,15 +2216,15 @@ function gt(e, t) {
 			sendBulkJoin: (e, t) => {
 				r.send(e, { disableApproval: t });
 			}
-		}, s = r.onMessage((e) => mt(e, a)), c = r.onStatusChange((e) => H({ connectionStatus: e }));
+		}, s = r.onMessage((e) => vt(e, a)), c = r.onStatusChange((e) => V({ connectionStatus: e })), l = r.onReconnectChange?.((e) => V({ reconnect: e }));
 		r.connect(e);
-		let l = null, u = null, d = !1, f = () => {
-			d || (d = !0, r.send("exitRoom"));
+		let u = null, d = null, f = !1, p = () => {
+			f || (f = !0, r.send("exitRoom"));
 		};
-		return o && (l = setInterval(() => {
+		return o && (u = setInterval(() => {
 			r.send("heartbeat");
-		}, h), u = setInterval(ht, m), window.addEventListener("pagehide", f)), () => {
-			n !== null && clearTimeout(n), l !== null && clearInterval(l), u !== null && clearInterval(u), o && (window.removeEventListener("pagehide", f), f()), s(), c(), r.disconnect();
+		}, h), d = setInterval(yt, m), window.addEventListener("pagehide", p)), () => {
+			n !== null && clearTimeout(n), u !== null && clearInterval(u), d !== null && clearInterval(d), o && (window.removeEventListener("pagehide", p), z.getState().closedReason === null && p()), s(), c(), l?.(), r.disconnect(), V({ reconnect: null });
 		};
 	}, [
 		e,
@@ -2176,58 +2235,62 @@ function gt(e, t) {
 	]);
 }
 // src/modules/poker/RoomPage.tsx
-var _t = "We could not open this room. It may have been closed, or you may no longer be a member.";
-function vt() {
-	let { roomId: r = "" } = O(), i = t(), { session: a, room: o } = n(), [s, c] = D(null), l = V((e) => e.isLoaded), u = V((e) => e.closedReason), d = V((e) => e.connectionStatus);
-	w(() => {
+var xt = "We could not open this room. It may have been closed, or you may no longer be a member.";
+function St() {
+	let { roomId: r = "" } = D(), i = t(), { session: a, room: o } = n(), [s, c] = E(null), l = B((e) => e.isLoaded), u = B((e) => e.closedReason), d = B((e) => e.connectionStatus);
+	C(() => {
 		if (!r) {
 			i.toHome();
 			return;
 		}
 		let e = a.sessionFor(r);
 		if (e === null) i.toJoin(r);
-		else return H({
+		else return V({
 			roomId: r,
 			sid: e.sid,
 			role: e.role
 		}), c(!0), o.refreshSession?.().catch((e) => {
 			console.error("Could not refresh the room session", e);
 		}), () => {
-			ie();
+			ae();
 		};
 	}, [
 		r,
 		i,
 		a,
 		o
-	]), gt(r, s === !0), qe(), Ke();
+	]), bt(r, s === !0 && u === null), Qe(), Ze();
 	let f = () => {
-		a.clear(), ie(), i.toHome();
+		a.clear(), ae(), i.toHome();
 	};
-	return s === null ? /* @__PURE__ */ I(e, { label: "Checking your session" }) : u === null ? !l && d === "closed" ? /* @__PURE__ */ I(Fe, {
-		reason: _t,
+	return s === null ? /* @__PURE__ */ F(e, { label: "Checking your session" }) : u === null ? !l && d === "closed" ? /* @__PURE__ */ F(Be, {
+		reason: xt,
 		onExit: f
-	}) : l ? /* @__PURE__ */ L("div", {
+	}) : l ? /* @__PURE__ */ I("div", {
 		className: "pk-room",
 		children: [
-			/* @__PURE__ */ I(Re, { onExit: f }),
-			/* @__PURE__ */ I(be, {}),
-			/* @__PURE__ */ I("main", {
+			/* @__PURE__ */ F(Ue, { onExit: f }),
+			/* @__PURE__ */ F(Ce, {}),
+			/* @__PURE__ */ F(we, {}),
+			/* @__PURE__ */ F("main", {
 				className: "pk-room__main pk-scroll",
-				children: /* @__PURE__ */ L("div", {
+				children: /* @__PURE__ */ I("div", {
 					className: "pk-room__content",
-					children: [/* @__PURE__ */ I(We, {}), /* @__PURE__ */ I(Ne, {})]
+					children: [/* @__PURE__ */ F(Ye, {}), /* @__PURE__ */ F(Re, {})]
 				})
 			}),
-			/* @__PURE__ */ I(pe, {}),
-			/* @__PURE__ */ I(De, {}),
-			/* @__PURE__ */ I(je, {}),
-			/* @__PURE__ */ I(xe, {}),
-			/* @__PURE__ */ I(ve, {})
+			/* @__PURE__ */ F(me, {}),
+			/* @__PURE__ */ F(Me, {}),
+			/* @__PURE__ */ F(Ie, {}),
+			/* @__PURE__ */ F(Te, {}),
+			/* @__PURE__ */ F(ye, {})
 		]
-	}) : /* @__PURE__ */ I(e, { label: d === "reconnecting" ? "Reconnecting" : "Joining the room" }) : /* @__PURE__ */ I(Fe, {
+	}) : /* @__PURE__ */ I("div", {
+		className: "pk-room",
+		children: [/* @__PURE__ */ F(Ce, {}), /* @__PURE__ */ F(e, { label: d === "reconnecting" ? "Reconnecting" : "Joining the room" })]
+	}) : /* @__PURE__ */ F(Be, {
 		reason: u,
 		onExit: f
 	});
 }
-export { vt as default };
+export { St as default };
