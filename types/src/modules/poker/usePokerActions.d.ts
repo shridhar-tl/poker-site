@@ -7,6 +7,7 @@ export declare function usePokerActions(): {
     setFinalScore: (finalScore: VoteValue) => Promise<boolean>;
     saveEstimate: (issueId: string, points: number) => Promise<boolean>;
     addIssue: (issue: Partial<PokerIssue>) => Promise<boolean>;
+    addIssues: (candidates: Partial<PokerIssue>[]) => Promise<number>;
     removeIssue: (issueId: string) => Promise<boolean>;
     reorderIssues: (issueIds: string[]) => Promise<boolean>;
     selectIssue: (issueId: string) => void;

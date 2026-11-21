@@ -3,14 +3,14 @@ import type { ServiceContainer } from 'fluxo-ui/services';
 import type { CreateRoomRequest, DirectoryRoom, JoinPendingResponse, JoinRequestStatus, JoinRoomRequest, MemberRole, PokerIssue, PokerRoom, PokerSession, PokerUserRef, RoomDirectory, RoomSnapshot, RoomSummary } from '../../shared/types/poker';
 import type { ClientAction, ServerMessage } from '../../shared/types/realtime';
 export declare const pokerServices: {
-    readonly room: 'PokerRoomService';
-    readonly session: 'PokerSessionService';
-    readonly realtime: 'PokerRealtimeService';
-    readonly identity: 'PokerIdentityService';
-    readonly issues: 'PokerIssueProvider';
-    readonly host: 'PokerHostService';
-    readonly directory: 'PokerDirectoryService';
-    readonly userPicker: 'PokerUserPicker';
+    readonly room: "PokerRoomService";
+    readonly session: "PokerSessionService";
+    readonly realtime: "PokerRealtimeService";
+    readonly identity: "PokerIdentityService";
+    readonly issues: "PokerIssueProvider";
+    readonly host: "PokerHostService";
+    readonly directory: "PokerDirectoryService";
+    readonly userPicker: "PokerUserPicker";
 };
 export type PokerServiceName = (typeof pokerServices)[keyof typeof pokerServices];
 export declare function registerPokerService<T>(container: ServiceContainer, name: PokerServiceName, factory: () => T): void;
@@ -95,6 +95,30 @@ export interface IssueSuggestion {
     icon?: string;
     url?: string;
     root?: string;
+    status?: string;
+    estimate?: number;
+}
+export interface IssueBoard {
+    id: string;
+    name: string;
+}
+export type IssueSprintState = 'active' | 'future';
+export interface IssueSprint {
+    id: string;
+    name: string;
+    state: IssueSprintState;
+}
+export interface IssueBatch {
+    issues: IssueSuggestion[];
+    hasMore: boolean;
+}
+export interface PokerSprintSource {
+    listBoards(): Promise<IssueBoard[]>;
+    listSprints(boardId: string): Promise<IssueSprint[]>;
+    loadSprintIssues(sprintId: string, limit: number): Promise<IssueBatch>;
+}
+export interface PokerQuerySource {
+    loadIssues(query: string, limit: number): Promise<IssueBatch>;
 }
 export type EstimateTarget = {
     ready: true;
@@ -109,6 +133,8 @@ export interface PokerIssueProvider {
     getIssue(key: string): Promise<PokerIssue | null>;
     getEstimateTarget(): Promise<EstimateTarget | null>;
     updateEstimate(issue: PokerIssue, points: number): Promise<void>;
+    sprints?: PokerSprintSource;
+    query?: PokerQuerySource;
 }
 export interface PokerHostCapabilities {
     directory: boolean;

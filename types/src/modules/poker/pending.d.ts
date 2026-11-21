@@ -1,11 +1,11 @@
 export declare const pendingKeys: {
-    readonly vote: 'vote';
-    readonly round: 'round';
-    readonly settings: 'settings';
-    readonly avatar: 'avatar';
-    readonly invite: 'invite';
-    readonly leave: 'leave';
-    readonly host: 'host';
+    readonly vote: "vote";
+    readonly round: "round";
+    readonly settings: "settings";
+    readonly avatar: "avatar";
+    readonly invite: "invite";
+    readonly leave: "leave";
+    readonly host: "host";
     readonly issue: (issueId: string) => string;
     readonly member: (sid: string) => string;
     readonly joinRequest: (requestId: string) => string;

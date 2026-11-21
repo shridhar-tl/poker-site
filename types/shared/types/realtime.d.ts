@@ -1,7 +1,7 @@
 import type { EstimateSyncMode, HeartbeatResult, JoinRequestStatus, PokerInvitation, PokerIssue, PokerJoinRequest, PokerMember, PokerRoom, PokerRoomAccess, PokerUserRef, PokerVote, RoomSnapshot, VoteValue } from './poker';
-export declare const clientActions: readonly ['auth', 'ping', 'requestResync', 'submitVote', 'startRound', 'restartRound', 'revealVotes', 'setFinalScore', 'addIssue', 'removeIssue', 'reorderIssues', 'updateSettings', 'updateAvatar', 'renameRoom', 'kickMember', 'transferModerator', 'leaveRoom', 'closeRoom', 'approveJoin', 'rejectJoin', 'approveAllJoin', 'rejectAllJoin', 'inviteMembers', 'revokeInvite', 'updateAccess', 'claimModerator', 'heartbeat', 'exitRoom'];
+export declare const clientActions: readonly ["auth", "ping", "requestResync", "submitVote", "startRound", "restartRound", "revealVotes", "setFinalScore", "addIssue", "addIssues", "removeIssue", "reorderIssues", "updateSettings", "updateAvatar", "renameRoom", "kickMember", "transferModerator", "leaveRoom", "closeRoom", "approveJoin", "rejectJoin", "approveAllJoin", "rejectAllJoin", "inviteMembers", "revokeInvite", "updateAccess", "claimModerator", "heartbeat", "exitRoom"];
 export type ClientAction = (typeof clientActions)[number];
-export declare const serverActions: readonly ['authResult', 'pong', 'roomState', 'roomUpdated', 'memberJoined', 'memberUpdated', 'memberLeft', 'presenceUpdate', 'issuesUpdated', 'roundStarted', 'voteProgress', 'votesRevealed', 'voteUpdated', 'moderatorChanged', 'kicked', 'roomClosed', 'sessionTakenOver', 'joinRequested', 'joinRequestResolved', 'membersJoined', 'invitationsUpdated', 'heartbeatResult', 'ack', 'error'];
+export declare const serverActions: readonly ["authResult", "pong", "roomState", "roomUpdated", "memberJoined", "memberUpdated", "memberLeft", "presenceUpdate", "issuesUpdated", "roundStarted", "voteProgress", "votesRevealed", "voteUpdated", "moderatorChanged", "kicked", "roomClosed", "sessionTakenOver", "joinRequested", "joinRequestResolved", "membersJoined", "invitationsUpdated", "heartbeatResult", "ack", "error"];
 export type ServerAction = (typeof serverActions)[number];
 export interface ClientMessage<TPayload = unknown> {
     action: ClientAction;
@@ -39,6 +39,9 @@ export interface MemberLeftPayload {
 }
 export interface PresenceUpdatePayload {
     onlineIds: string[];
+}
+export interface AddIssuesPayload {
+    issues: Partial<PokerIssue>[];
 }
 export interface IssuesUpdatedPayload {
     issues: PokerIssue[];

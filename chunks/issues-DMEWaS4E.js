@@ -25,4 +25,15 @@ function o(t, n) {
 		if (t === "finalScore") return e(n.finalScore) ? n.finalScore : void 0;
 	}
 }
-export { r as a, t as i, a as n, i as o, n as r, o as t };
+// shared/poker/issues.ts
+function s(e) {
+	return e.trim().toLowerCase();
+}
+function c(e, t) {
+	let n = new Set(e.map((e) => s(e.key)));
+	return t.filter((e) => {
+		let t = s(e.key);
+		return !t || n.has(t) ? !1 : (n.add(t), !0);
+	});
+}
+export { n as a, i as c, a as i, c as n, t as o, o as r, r as s, s as t };
