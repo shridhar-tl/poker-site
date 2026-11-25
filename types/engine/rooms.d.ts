@@ -46,7 +46,7 @@ export declare function createRoomsApi(deps: EngineDeps): {
     admit: (room: RoomRecord, input: JoinRoomInput) => Promise<{
         room: RoomRecord;
         member: MemberRecord;
-    }>;
+    } | null>;
     purgeStaleRequests: (roomId: string, requests: JoinRequestRecord[]) => Promise<JoinRequestRecord[]>;
     getJoinRequest: (roomId: string, memberKey: string) => Promise<{
         status: JoinRequestStatus;

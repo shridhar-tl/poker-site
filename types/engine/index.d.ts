@@ -9,7 +9,7 @@ export declare function createEngine(deps: EngineDeps): {
         admit: (room: import("./types").RoomRecord, input: import("./rooms").JoinRoomInput) => Promise<{
             room: import("./types").RoomRecord;
             member: import("./types").MemberRecord;
-        }>;
+        } | null>;
         purgeStaleRequests: (roomId: string, requests: import("./types").JoinRequestRecord[]) => Promise<import("./types").JoinRequestRecord[]>;
         getJoinRequest: (roomId: string, memberKey: string) => Promise<{
             status: import("../shared/types/poker").JoinRequestStatus;

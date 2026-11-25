@@ -176,101 +176,101 @@ function N() {
 	for (let n of e) t += j[n % 36];
 	return t;
 }
-var P = 31, te = 127;
-function F(e) {
+var P = 31, F = 127;
+function I(e) {
 	let t = "";
 	for (let n of e) {
 		let e = n.codePointAt(0) ?? 0;
-		e > P && e !== te && (t += n);
+		e > P && e !== F && (t += n);
 	}
 	return t.trim();
 }
-function I(e, t, n) {
+function L(e, t, n) {
 	if (typeof e != "string" || !e.trim()) throw v(`${t} is required.`);
-	let r = F(e);
+	let r = I(e);
 	if (!r) throw v(`${t} is required.`);
 	if (n?.min && r.length < n.min) throw v(`${t} must be at least ${n.min} characters.`);
 	if (n?.max && r.length > n.max) throw v(`${t} must be at most ${n.max} characters.`);
 	return r;
 }
-function L(e, t, n) {
-	if (e != null && e !== "") return I(e, t, n);
+function R(e, t, n) {
+	if (e != null && e !== "") return L(e, t, n);
 }
-var R = /^https?:\/\//i;
-function z(e, t) {
-	let n = L(e, t, { max: 2048 });
+var z = /^https?:\/\//i;
+function B(e, t) {
+	let n = R(e, t, { max: 2048 });
 	if (n !== void 0) {
-		if (!R.test(n)) throw v(`${t} must be an http or https URL.`);
+		if (!z.test(n)) throw v(`${t} must be an http or https URL.`);
 		return n;
 	}
 }
-var ne = /^[a-z0-9]{4,15}$/;
-function B(e) {
-	let t = I(e, "Room id", {
+var te = /^[a-z0-9]{4,15}$/;
+function V(e) {
+	let t = L(e, "Room id", {
 		min: 4,
 		max: 15
 	}).toLowerCase();
-	if (!ne.test(t)) throw v("Room id is not valid.");
+	if (!te.test(t)) throw v("Room id is not valid.");
 	return t;
 }
-function re(e) {
+function ne(e) {
 	return typeof e == "object" && e && !Array.isArray(e) ? e : {};
-}
-function V(e, t) {
-	let n = e[t];
-	return typeof n == "string" && n.length > 0 ? n : null;
 }
 function H(e, t) {
 	let n = e[t];
+	return typeof n == "string" && n.length > 0 ? n : null;
+}
+function U(e, t) {
+	let n = e[t];
 	return typeof n == "boolean" ? n : void 0;
 }
-function ie(e, t) {
+function re(e, t) {
 	let n = e[t];
 	return typeof n == "number" && Number.isFinite(n) ? n : void 0;
 }
-function U(e, t) {
+function W(e, t) {
 	let n = e[t];
 	return typeof n == "string" && n.length > 0 || typeof n == "number" && Number.isFinite(n) ? n : null;
 }
 // engine/rooms.ts
-var W = "This room does not exist or has already been closed.", ae = "This room is full. Ask the moderator to remove inactive players.", G = "You have created too many rooms recently. Please try again later.", K = 5, q = /^[A-Za-z0-9_-]{1,40}$/, J = 200;
-function oe(e) {
+var ie = "This room does not exist or has already been closed.", ae = "This room is full. Ask the moderator to remove inactive players.", G = "The room is busy. Please retry.", oe = "You have created too many rooms recently. Please try again later.", K = 5, q = /^[A-Za-z0-9_-]{1,40}$/, se = 200;
+function J(e) {
 	let t = typeof e == "string" ? parseInt(e, 10) : e;
 	if (!l(t)) throw v("The selected score type is not valid.");
 	return t;
 }
-function Y(t) {
+function ce(t) {
 	return t == null ? null : e(t) ? t : null;
 }
-function X(e, t) {
+function Y(e, t) {
 	return {
-		id: e.id === void 0 || e.id === null || e.id === "" ? t(10) : se(e.id),
-		key: I(e.key, "Issue key", { max: 64 }),
+		id: e.id === void 0 || e.id === null || e.id === "" ? t(10) : X(e.id),
+		key: L(e.key, "Issue key", { max: 64 }),
 		summary: e.summary ? String(e.summary).slice(0, 500) : void 0,
-		url: z(e.url, "Issue URL"),
-		icon: z(e.icon, "Issue icon"),
-		root: z(e.root, "Jira site")
+		url: B(e.url, "Issue URL"),
+		icon: B(e.icon, "Issue icon"),
+		root: B(e.root, "Jira site")
 	};
 }
-function se(e) {
+function X(e) {
 	let t = typeof e == "number" && Number.isInteger(e) ? String(e) : e;
 	if (typeof t != "string" || !q.test(t)) throw v("The issue id is not valid.");
 	return t;
 }
-function ce(e) {
+function le(e) {
 	let t = typeof e == "object" && e ? e : {};
 	return {
-		id: I(t.id, "User id", { max: 128 }),
-		name: I(t.name, "User name", { max: 100 }),
-		email: L(t.email, "User email", { max: 254 }),
-		avatarUrl: z(t.avatarUrl, "Avatar URL")
+		id: L(t.id, "User id", { max: 128 }),
+		name: L(t.name, "User name", { max: 100 }),
+		email: R(t.email, "User email", { max: 254 }),
+		avatarUrl: B(t.avatarUrl, "Avatar URL")
 	};
 }
-function Z(e) {
+function ue(e) {
 	let { store: n, config: r } = e, i = () => e.now ? e.now() : /* @__PURE__ */ new Date(), a = () => i().toISOString(), o = e.newId ?? ee;
 	async function s(e) {
 		let t = await n.getRoom(e);
-		if (!t) throw y(W);
+		if (!t) throw y(ie);
 		return t;
 	}
 	async function c(e, t) {
@@ -283,7 +283,7 @@ function Z(e) {
 		};
 	}
 	async function u(i) {
-		e.rateLimiter && await e.rateLimiter.enforce(`create-room#${i.memberKey}`, r.maxRoomsPerMemberPerHour, G);
+		e.rateLimiter && await e.rateLimiter.enforce(`create-room#${i.memberKey}`, r.maxRoomsPerMemberPerHour, oe);
 		let s = a(), c = o(12);
 		for (let r = 0; r < K; r += 1) {
 			let r = e.newRoomId ? e.newRoomId() : N(), a = {
@@ -342,7 +342,7 @@ function Z(e) {
 			joinedAt: c,
 			lastSeenAt: c
 		};
-		return await n.putMember(e.roomId, l), {
+		return await n.putMember(e.roomId, l) ? {
 			room: await n.updateRoom(e.roomId, {
 				memberCount: s.length + 1,
 				lastActivity: c
@@ -351,43 +351,49 @@ function Z(e) {
 				memberCount: s.length + 1
 			},
 			member: l
+		} : null;
+	}
+	async function p(e, r, i) {
+		let o = a(), s = await n.updateMember(i.roomId, r.sid, {
+			name: i.name,
+			avatarId: i.avatarId ?? r.avatarId ?? t(null, i.avatarUrl ?? r.avatarUrl),
+			avatarUrl: i.avatarUrl,
+			lastSeenAt: o
+		});
+		return await n.updateRoom(i.roomId, { lastActivity: o }), {
+			kind: "joined",
+			room: e,
+			member: s ?? r,
+			isNew: !1
 		};
 	}
-	async function p(r) {
-		let i = await s(r.roomId), o = a(), l = await c(r.roomId, r.memberKey);
-		if (l) {
-			let e = await n.updateMember(r.roomId, l.sid, {
-				name: r.name,
-				avatarId: r.avatarId ?? l.avatarId ?? t(null, r.avatarUrl ?? l.avatarUrl),
-				avatarUrl: r.avatarUrl,
-				lastSeenAt: o
-			});
-			return await n.updateRoom(r.roomId, { lastActivity: o }), {
+	async function h(t) {
+		let n = await s(t.roomId), r = await c(t.roomId, t.memberKey);
+		if (r) return await p(n, r, t);
+		let i = e.invitations ? await e.invitations.getInvitation(t.roomId, t.memberKey) : null, a = (t.restrictedIssueKeys ?? []).length > 0;
+		if (i || !n.access.requireApproval && !a) {
+			let r = await f(n, t);
+			if (!r) {
+				let e = await c(t.roomId, t.memberKey);
+				if (!e) throw x(G);
+				return await p(n, e, t);
+			}
+			return i && e.invitations && await e.invitations.removeInvitation(t.roomId, t.memberKey), {
 				kind: "joined",
-				room: i,
-				member: e ?? l,
-				isNew: !1
-			};
-		}
-		let u = e.invitations ? await e.invitations.getInvitation(r.roomId, r.memberKey) : null, d = (r.restrictedIssueKeys ?? []).length > 0;
-		if (u || !i.access.requireApproval && !d) {
-			let t = await f(i, r);
-			return u && e.invitations && await e.invitations.removeInvitation(r.roomId, r.memberKey), {
-				kind: "joined",
-				room: t.room,
-				member: t.member,
+				room: r.room,
+				member: r.member,
 				isNew: !0
 			};
 		}
-		return await g(i, r);
+		return await v(n, t);
 	}
-	async function h(e, t) {
+	async function g(e, t) {
 		let a = i().getTime() - r.joinRequestLifetimeMs, o = t.filter((e) => new Date(e.createdAt).getTime() < a), s = t.filter((e) => !o.includes(e)).filter((e) => e.status !== "pending").sort((e, t) => t.createdAt.localeCompare(e.createdAt)).slice(r.maxPendingJoinRequestsPerRoom), c = /* @__PURE__ */ new Set([...o, ...s]);
 		for (let t of c) await n.removeJoinRequest(e, t.requestId);
 		return t.filter((e) => !c.has(e));
 	}
-	async function g(e, i) {
-		let o = await h(e.roomId, await n.listJoinRequests(e.roomId)), s = o.filter((e) => e.status === "pending"), c = s.find((e) => e.memberKey === i.memberKey);
+	async function v(e, i) {
+		let o = await g(e.roomId, await n.listJoinRequests(e.roomId)), s = o.filter((e) => e.status === "pending"), c = s.find((e) => e.memberKey === i.memberKey);
 		if (c) return {
 			kind: "pending",
 			room: e,
@@ -405,7 +411,7 @@ function Z(e) {
 			avatarUrl: i.avatarUrl,
 			status: "pending",
 			createdAt: a()
-		}, u = (i.restrictedIssueKeys ?? []).slice(0, J);
+		}, u = (i.restrictedIssueKeys ?? []).slice(0, se);
 		return u.length && (l.restrictedIssueKeys = u), await n.putJoinRequest(l), {
 			kind: "pending",
 			room: e,
@@ -420,7 +426,7 @@ function Z(e) {
 			}]
 		};
 	}
-	async function v(e, t) {
+	async function E(e, t) {
 		if (await c(e, t)) return {
 			status: "approved",
 			admitted: !0
@@ -435,7 +441,7 @@ function Z(e) {
 			admitted: !1
 		};
 	}
-	async function E(e, t) {
+	async function D(e, t) {
 		let r = await n.getJoinRequest(e, t);
 		if (!r) return [];
 		await n.removeJoinRequest(e, t);
@@ -452,8 +458,8 @@ function Z(e) {
 			}
 		}] : [];
 	}
-	async function D(e) {
-		let t = await s(B(e));
+	async function A(e) {
+		let t = await s(V(e));
 		return {
 			roomId: t.roomId,
 			roomName: t.roomName,
@@ -463,7 +469,7 @@ function Z(e) {
 			requireApproval: t.access.requireApproval
 		};
 	}
-	async function A(t, r) {
+	async function j(t, r) {
 		let [i, o, c] = await Promise.all([
 			s(t),
 			n.listMembers(t),
@@ -480,7 +486,7 @@ function Z(e) {
 			serverTime: a()
 		};
 	}
-	async function j(t) {
+	async function M(t) {
 		let i = e.directory;
 		if (!r.directoryEnabled || !i) throw S("The room directory is not available.");
 		let a = r.directoryLimit, [o, s, c, l] = await Promise.all([
@@ -519,7 +525,7 @@ function Z(e) {
 			open: m.map(_)
 		};
 	}
-	async function M(t, r) {
+	async function P(t, r) {
 		let i = await n.getMember(t, r);
 		if (!i) return [];
 		let a = await n.listMembers(t), o = await e.presence.onlineSids(t, a);
@@ -536,7 +542,7 @@ function Z(e) {
 			payload: { onlineIds: [...o] }
 		}];
 	}
-	function P(e, t) {
+	function F(e, t) {
 		return {
 			audience: { kind: "room" },
 			action: "membersJoined",
@@ -545,30 +551,30 @@ function Z(e) {
 	}
 	return {
 		createRoom: u,
-		joinRoom: p,
+		joinRoom: h,
 		admit: f,
-		purgeStaleRequests: h,
-		getJoinRequest: v,
-		cancelJoinRequest: E,
-		getSummary: D,
-		buildSnapshot: A,
-		listDirectory: j,
-		announceMember: M,
-		membersJoinedEvent: P,
+		purgeStaleRequests: g,
+		getJoinRequest: E,
+		cancelJoinRequest: D,
+		getSummary: A,
+		buildSnapshot: j,
+		listDirectory: M,
+		announceMember: P,
+		membersJoinedEvent: F,
 		requireRoom: s,
 		forbidden: b
 	};
 }
 // engine/dispatch.ts
-var Q = "There is no active estimation round for this issue.", le = "Votes for this round have already been revealed.", ue = "You have already voted in this round.", de = "That issue is not part of this room.", fe = "This room has reached the maximum number of issues.", pe = "Add between 1 and 20 issues at a time.", me = "Only the moderator can perform this action.", he = "1970-01-01T00:00:00.000Z", ge = "The moderator closed this room.", _e = 40;
-function ve(e) {
+var Z = "There is no active estimation round for this issue.", de = "Votes for this round have already been revealed.", fe = "You have already voted in this round.", pe = "That issue is not part of this room.", me = "This room has reached the maximum number of issues.", he = "Add between 1 and 20 issues at a time.", ge = "Only the moderator can perform this action.", _e = "1970-01-01T00:00:00.000Z", ve = "The moderator closed this room.", ye = 40;
+function be(e) {
 	let t = e.estimateSync;
 	if (t !== void 0) {
 		if (!i(t)) throw v("The selected estimate update option is not valid.");
 		return t;
 	}
 }
-function ye(i, l) {
+function xe(i, l) {
 	let { store: u, config: d } = i, m = () => i.now ? i.now() : /* @__PURE__ */ new Date(), g = () => m().toISOString(), _ = i.newId ?? ee;
 	function O(e, t) {
 		return {
@@ -612,28 +618,28 @@ function ye(i, l) {
 	}
 	async function N(e, t, n) {
 		let r = await u.getVote(e, n);
-		if (!r) throw x(Q);
+		if (!r) throw x(Z);
 		if (r.reveal) return r;
 		let i = await u.listMembers(e), a = s(r.values, i.map((e) => e.sid), t), o = await u.revealVote(e, n, a);
-		if (!o) throw x(Q);
+		if (!o) throw x(Z);
 		return o;
 	}
 	let P = async ({ room: e, member: t, payload: n }) => {
-		let r = V(n, "issueId"), i = U(n, "vote");
+		let r = H(n, "issueId"), i = W(n, "vote");
 		if (!r || i === null) throw v("An issue and an estimate are required.");
 		if (!o(e.scoreType, i)) throw v("That is not a valid estimate for this deck.");
 		let a = await u.getVote(e.roomId, r);
-		if (!a) throw x(Q);
+		if (!a) throw x(Z);
 		let s = a.values[t.sid] !== void 0;
 		if (!p({
 			revealed: a.reveal,
 			isCurrentIssue: e.currentIssueId === r,
 			hasVoted: s,
 			allowRevote: e.settings.allowRevote
-		})) throw a.reveal ? x(le) : e.currentIssueId === r ? x(ue) : x(Q);
+		})) throw a.reveal ? x(de) : e.currentIssueId === r ? x(fe) : x(Z);
 		let c = await u.submitVote(e.roomId, r, t.sid, i);
-		if (c.kind === "revealed") throw x(le);
-		if (c.kind === "missing") throw x(Q);
+		if (c.kind === "revealed") throw x(de);
+		if (c.kind === "missing") throw x(Z);
 		let l = c.vote;
 		s || await u.updateMember(e.roomId, t.sid, {
 			votedIssueIds: [...t.votedIssueIds ?? [], r],
@@ -650,10 +656,10 @@ function ye(i, l) {
 				votedIds: d
 			}
 		};
-	}, te = async ({ room: e, payload: t }) => {
-		let n = V(t, "issueId");
+	}, F = async ({ room: e, payload: t }) => {
+		let n = H(t, "issueId");
 		if (!n) throw v("An issue is required to start a round.");
-		if (!e.issues.some((e) => e.id === n)) throw y(de);
+		if (!e.issues.some((e) => e.id === n)) throw y(pe);
 		let r = M(n);
 		return await u.startRound(e.roomId, {
 			vote: r,
@@ -666,10 +672,10 @@ function ye(i, l) {
 			issues: e.issues,
 			vote: D(r)
 		})] };
-	}, F = async ({ room: e, payload: t }) => {
-		let n = V(t, "issueId");
+	}, I = async ({ room: e, payload: t }) => {
+		let n = H(t, "issueId");
 		if (!n) throw v("An issue is required to restart a round.");
-		if (!e.issues.some((e) => e.id === n)) throw y(de);
+		if (!e.issues.some((e) => e.id === n)) throw y(pe);
 		let r = _(10), i = e.issues.map((e) => e.id === n ? {
 			...e,
 			id: r
@@ -687,16 +693,16 @@ function ye(i, l) {
 			issues: i,
 			vote: D(a)
 		})] };
-	}, I = async ({ room: e, payload: t }) => {
-		let n = V(t, "issueId") ?? e.currentIssueId;
+	}, L = async ({ room: e, payload: t }) => {
+		let n = H(t, "issueId") ?? e.currentIssueId;
 		if (!n) throw v("There is no round to reveal.");
 		let r = await N(e.roomId, e.scoreType, n);
 		return await u.updateRoom(e.roomId, { lastActivity: g() }), { events: [O("votesRevealed", { vote: E(r) })] };
-	}, L = async ({ room: e, payload: t }) => {
-		let n = V(t, "issueId"), r = U(t, "finalScore");
+	}, R = async ({ room: e, payload: t }) => {
+		let n = H(t, "issueId"), r = W(t, "finalScore");
 		if (!n || r === null) throw v("An issue and a final score are required.");
 		if (!o(e.scoreType, r)) throw v("That is not a valid final score for this deck.");
-		let i = H(t, "synced") === !0;
+		let i = U(t, "synced") === !0;
 		if (i && !c(r)) throw v("Only numeric scores can be saved as story points.");
 		let a = await u.setFinalScore(e.roomId, n, i ? {
 			finalScore: r,
@@ -705,54 +711,54 @@ function ye(i, l) {
 		if (!a) throw x("Reveal the votes before setting a final score.");
 		return { events: [O("votesRevealed", { vote: E(a) })] };
 	};
-	function R(e, t) {
+	function z(e, t) {
 		return O("issuesUpdated", {
 			issues: e,
 			currentIssueId: t
 		});
 	}
-	let z = async ({ room: e, payload: t }) => {
-		let n = X(t.issue ?? t, _);
-		if (e.issues.length >= d.maxRoomIssues) throw x(fe);
+	let B = async ({ room: e, payload: t }) => {
+		let n = Y(t.issue ?? t, _);
+		if (e.issues.length >= d.maxRoomIssues) throw x(me);
 		let r = [...e.issues, n];
 		return await u.updateRoom(e.roomId, {
 			issues: r,
 			lastActivity: g()
-		}), { events: [R(r, e.currentIssueId)] };
-	}, ne = async ({ room: e, payload: t }) => {
+		}), { events: [z(r, e.currentIssueId)] };
+	}, te = async ({ room: e, payload: t }) => {
 		let n = t.issues;
-		if (!Array.isArray(n) || n.length === 0 || n.length > 20) throw v(pe);
-		let i = n.map((e) => X(typeof e == "object" && e ? e : {}, _)), a = r(e.issues, i);
+		if (!Array.isArray(n) || n.length === 0 || n.length > 20) throw v(he);
+		let i = n.map((e) => Y(typeof e == "object" && e ? e : {}, _)), a = r(e.issues, i);
 		if (a.length === 0) return {
 			result: { added: 0 },
 			events: []
 		};
 		let o = d.maxRoomIssues - e.issues.length;
-		if (a.length > o) throw x(o > 0 ? `Only ${o} more issue${o === 1 ? "" : "s"} fit in this room.` : fe);
+		if (a.length > o) throw x(o > 0 ? `Only ${o} more issue${o === 1 ? "" : "s"} fit in this room.` : me);
 		let s = [...e.issues, ...a];
 		return await u.updateRoom(e.roomId, {
 			issues: s,
 			lastActivity: g()
 		}), {
 			result: { added: a.length },
-			events: [R(s, e.currentIssueId)]
+			events: [z(s, e.currentIssueId)]
 		};
-	}, B = async ({ room: e, payload: t }) => {
-		let n = V(t, "issueId");
+	}, V = async ({ room: e, payload: t }) => {
+		let n = H(t, "issueId");
 		if (!n) throw v("An issue is required.");
 		let r = e.issues.filter((e) => e.id !== n), i = e.currentIssueId === n ? null : e.currentIssueId;
 		return await u.updateRoom(e.roomId, {
 			issues: r,
 			currentIssueId: i,
 			lastActivity: g()
-		}), await u.removeVote(e.roomId, n), await j(e.roomId, n), { events: [R(r, i)] };
-	}, W = async ({ room: e, payload: t }) => {
+		}), await u.removeVote(e.roomId, n), await j(e.roomId, n), { events: [z(r, i)] };
+	}, ie = async ({ room: e, payload: t }) => {
 		let n = t.issueIds, r = Array.isArray(n) ? n.filter((e) => typeof e == "string") : [], i = new Map(e.issues.map((e) => [e.id, e])), a = r.map((e) => i.get(e)).filter((e) => e !== void 0);
 		if (a.length !== e.issues.length) throw v("The issue order does not match this room.");
 		return await u.updateRoom(e.roomId, {
 			issues: a,
 			lastActivity: g()
-		}), { events: [R(a, e.currentIssueId)] };
+		}), { events: [z(a, e.currentIssueId)] };
 	};
 	function ae(e, t) {
 		let r = h(e.scoreType, e.settings);
@@ -765,30 +771,30 @@ function ye(i, l) {
 	async function G(e) {
 		return O("roomUpdated", { room: C(await l.requireRoom(e)) });
 	}
-	let K = async ({ room: e, payload: t }) => {
+	let oe = async ({ room: e, payload: t }) => {
 		let n = ae(e, {
-			autoReveal: H(t, "autoReveal"),
-			showHalfScore: H(t, "showHalfScore"),
-			allowRevote: H(t, "allowRevote"),
-			maxPoints: ie(t, "maxPoints"),
-			estimateSync: ve(t)
+			autoReveal: U(t, "autoReveal"),
+			showHalfScore: U(t, "showHalfScore"),
+			allowRevote: U(t, "allowRevote"),
+			maxPoints: re(t, "maxPoints"),
+			estimateSync: be(t)
 		}), r = await u.updateRoom(e.roomId, {
 			settings: n,
 			lastActivity: g()
 		});
 		if (!r) throw y("This room does not exist or has already been closed.");
 		return { events: [O("roomUpdated", { room: C(r) })] };
-	}, q = async ({ room: e, payload: t }) => {
-		let n = V(t, "roomName");
+	}, K = async ({ room: e, payload: t }) => {
+		let n = H(t, "roomName");
 		if (!n) throw v("A room name is required.");
 		let r = await u.updateRoom(e.roomId, {
-			roomName: n.slice(0, _e),
+			roomName: n.slice(0, ye),
 			lastActivity: g()
 		});
 		if (!r) throw y("This room does not exist or has already been closed.");
 		return { events: [O("roomUpdated", { room: C(r) })] };
-	}, J = async ({ room: e, payload: t }) => {
-		let n = { ...e.access }, r = H(t, "requireApproval"), i = H(t, "listed");
+	}, q = async ({ room: e, payload: t }) => {
+		let n = { ...e.access }, r = U(t, "requireApproval"), i = U(t, "listed");
 		r !== void 0 && (n.requireApproval = r), i !== void 0 && (n.listed = d.directoryEnabled ? i : !1);
 		let a = await u.updateRoom(e.roomId, {
 			access: n,
@@ -796,7 +802,7 @@ function ye(i, l) {
 		});
 		if (!a) throw y("This room does not exist or has already been closed.");
 		return { events: [O("roomUpdated", { room: C(a) })] };
-	}, oe = async ({ room: n, member: r, payload: a }) => {
+	}, se = async ({ room: n, member: r, payload: a }) => {
 		let o = a.avatarId, s = typeof o == "number" ? o : null;
 		if (s !== null && !e(s)) throw v("The selected avatar is not valid.");
 		let c = t(s, r.avatarUrl), l = await u.updateMember(n.roomId, r.sid, {
@@ -807,7 +813,7 @@ function ye(i, l) {
 		let d = await u.listMembers(n.roomId);
 		return { events: [O("memberUpdated", { member: w(l, (await i.presence.onlineSids(n.roomId, d)).has(l.sid)) })] };
 	};
-	async function Y(e, t) {
+	async function J(e, t) {
 		await u.removeMember(e, t);
 		let n = await u.listMembers(e);
 		await u.updateRoom(e, {
@@ -815,12 +821,12 @@ function ye(i, l) {
 			lastActivity: g()
 		});
 	}
-	let se = async ({ room: e, member: t, payload: n }) => {
-		let r = V(n, "sid");
+	let ce = async ({ room: e, member: t, payload: n }) => {
+		let r = H(n, "sid");
 		if (!r) throw v("A member is required.");
 		if (r === t.sid) throw v("You cannot remove yourself. Close the room instead.");
 		let a = await u.getMember(e.roomId, r);
-		return await Y(e.roomId, r), a && i.invitations && await i.invitations.removeInvitation(e.roomId, a.memberKey), {
+		return await J(e.roomId, r), a && i.invitations && await i.invitations.removeInvitation(e.roomId, a.memberKey), {
 			events: [
 				k(r, "kicked", { reason: "The moderator removed you from this room." }),
 				O("memberLeft", { sid: r }),
@@ -829,20 +835,20 @@ function ye(i, l) {
 			disconnect: { sids: [r] }
 		};
 	};
-	async function Z(e, t, n) {
+	async function X(e, t, n) {
 		return await u.transferModerator(e.roomId, t, n.sid, n.memberKey);
 	}
-	let ye = async ({ room: e, member: t, payload: n }) => {
-		let r = V(n, "sid");
+	let ue = async ({ room: e, member: t, payload: n }) => {
+		let r = H(n, "sid");
 		if (!r) throw v("A member is required.");
 		let i = await u.getMember(e.roomId, r);
 		if (!i) throw b("You are not a member of this room.");
-		if (!await Z(e, t.sid, i)) throw x("The moderator has already changed.");
+		if (!await X(e, t.sid, i)) throw x("The moderator has already changed.");
 		return { events: [O("moderatorChanged", {
 			moderatorId: r,
 			previousModeratorId: t.sid
 		}), await G(e.roomId)] };
-	}, be = async ({ room: e, member: t }) => {
+	}, xe = async ({ room: e, member: t }) => {
 		if (e.moderatorId === t.sid) throw x("You are already the host of this room.");
 		let n = await u.listMembers(e.roomId), r = n.find((t) => t.sid === e.moderatorId);
 		if (r) {
@@ -850,22 +856,22 @@ function ye(i, l) {
 			if (t.has(r.sid) || a < d.hostAwayGraceMs) throw x("The host is still in this room.");
 		}
 		let a = e.moderatorId;
-		if (await u.updateMember(e.roomId, t.sid, { lastSeenAt: g() }), !await Z(e, a, t)) throw x("Someone else has already taken over as host.");
+		if (await u.updateMember(e.roomId, t.sid, { lastSeenAt: g() }), !await X(e, a, t)) throw x("Someone else has already taken over as host.");
 		return { events: [O("moderatorChanged", {
 			moderatorId: t.sid,
 			previousModeratorId: a
 		}), await G(e.roomId)] };
-	}, xe = async ({ room: e, member: t, payload: n }) => {
-		if (e.moderatorId !== t.sid) return await Y(e.roomId, t.sid), {
+	}, Se = async ({ room: e, member: t, payload: n }) => {
+		if (e.moderatorId !== t.sid) return await J(e.roomId, t.sid), {
 			events: [O("memberLeft", { sid: t.sid }), await A(e.roomId)],
 			disconnect: { sids: [t.sid] }
 		};
 		let r = (await u.listMembers(e.roomId)).filter((e) => e.sid !== t.sid);
-		if (r.length === 0) return await Se(e.roomId, ge);
-		let i = V(n, "successorSid"), a = r.find((e) => e.sid === i);
+		if (r.length === 0) return await Q(e.roomId, ve);
+		let i = H(n, "successorSid"), a = r.find((e) => e.sid === i);
 		if (!a) throw v("Choose who should host this room before you leave.");
-		if (!await Z(e, t.sid, a)) throw x("The moderator has already changed.");
-		return await Y(e.roomId, t.sid), {
+		if (!await X(e, t.sid, a)) throw x("The moderator has already changed.");
+		return await J(e.roomId, t.sid), {
 			events: [
 				O("moderatorChanged", {
 					moderatorId: a.sid,
@@ -878,7 +884,7 @@ function ye(i, l) {
 			disconnect: { sids: [t.sid] }
 		};
 	};
-	async function Se(e, t) {
+	async function Q(e, t) {
 		let n = O("roomClosed", { reason: t });
 		if (await u.removeRoom(e), i.invitations) {
 			let t = await i.invitations.listInvitations(e);
@@ -890,7 +896,7 @@ function ye(i, l) {
 			roomClosed: !0
 		};
 	}
-	let Ce = async ({ room: e }) => await Se(e.roomId, ge), we = async ({ room: e, member: t }) => ({
+	let Ce = async ({ room: e }) => await Q(e.roomId, ve), we = async ({ room: e, member: t }) => ({
 		events: [],
 		result: await l.buildSnapshot(e.roomId, t.sid)
 	}), Te = async ({ room: e, member: t }) => {
@@ -910,8 +916,8 @@ function ye(i, l) {
 				pendingJoinRequests: a
 			}
 		};
-	}, Ee = async ({ room: e, member: t }) => (await u.updateMember(e.roomId, t.sid, { lastSeenAt: he }), { events: [await A(e.roomId)] }), De = async ({ room: e, payload: t }) => {
-		let n = V(t, "requestId");
+	}, Ee = async ({ room: e, member: t }) => (await u.updateMember(e.roomId, t.sid, { lastSeenAt: _e }), { events: [await A(e.roomId)] }), De = async ({ room: e, payload: t }) => {
+		let n = H(t, "requestId");
 		if (!n) throw v("A join request is required.");
 		let r = await u.getJoinRequest(e.roomId, n), a = await u.listMembers(e.roomId);
 		if (!r) {
@@ -931,28 +937,26 @@ function ye(i, l) {
 		let o = a.some((e) => e.memberKey === r.memberKey), s = k(e.moderatorId, "joinRequestResolved", {
 			requestIds: [n],
 			status: "approved"
-		});
-		if (o) return await u.removeJoinRequest(e.roomId, n), {
+		}), c = o ? null : await l.admit(e, r);
+		if (await u.removeJoinRequest(e.roomId, n), !c) return {
 			events: [s],
 			result: {
 				approved: 0,
 				remaining: 0
 			}
 		};
-		let { member: c } = await l.admit(e, r);
-		await u.removeJoinRequest(e.roomId, n);
-		let d = await i.presence.onlineSids(e.roomId, [c]);
+		let { member: d } = c, f = await i.presence.onlineSids(e.roomId, [d]);
 		return {
-			events: [l.membersJoinedEvent([c], d), s],
+			events: [l.membersJoinedEvent([d], f), s],
 			result: {
 				approved: 1,
 				remaining: 0
 			}
 		};
 	}, Oe = async ({ room: e, payload: t }) => {
-		let n = V(t, "requestId");
+		let n = H(t, "requestId");
 		if (!n) throw v("A join request is required.");
-		let r = V(t, "reason")?.slice(0, 200);
+		let r = H(t, "reason")?.slice(0, 200);
 		if (!await u.updateJoinRequest(e.roomId, n, {
 			status: "rejected",
 			reason: r
@@ -983,10 +987,10 @@ function ye(i, l) {
 				votedIssueIds: [],
 				joinedAt: f,
 				lastSeenAt: f
-			};
-			await u.putMember(e.roomId, n), await u.removeJoinRequest(e.roomId, t.requestId), a.add(t.memberKey), s.push(n), c.push(t.requestId), p += 1;
+			}, r = await u.putMember(e.roomId, n);
+			await u.removeJoinRequest(e.roomId, t.requestId), a.add(t.memberKey), c.push(t.requestId), r && (s.push(n), p += 1);
 		}
-		let m = H(t, "disableApproval") === !0, h = {
+		let m = U(t, "disableApproval") === !0, h = {
 			memberCount: p,
 			lastActivity: f
 		}, v = await u.updateRoom(e.roomId, m ? {
@@ -1011,7 +1015,7 @@ function ye(i, l) {
 			}
 		};
 	}, je = async ({ room: e, payload: t }) => {
-		let n = await ke(e.roomId), r = n.slice(0, d.bulkJoinBatchSize), i = V(t, "reason")?.slice(0, 200);
+		let n = await ke(e.roomId), r = n.slice(0, d.bulkJoinBatchSize), i = H(t, "reason")?.slice(0, 200);
 		for (let t of r) await u.updateJoinRequest(e.roomId, t.requestId, {
 			status: "rejected",
 			reason: i
@@ -1034,27 +1038,27 @@ function ye(i, l) {
 	let $ = {
 		requestResync: we,
 		submitVote: P,
-		startRound: te,
-		restartRound: F,
-		revealVotes: I,
-		setFinalScore: L,
-		addIssue: z,
-		addIssues: ne,
-		removeIssue: B,
-		reorderIssues: W,
-		updateSettings: K,
-		renameRoom: q,
-		updateAvatar: oe,
-		kickMember: se,
-		transferModerator: ye,
-		leaveRoom: xe,
+		startRound: F,
+		restartRound: I,
+		revealVotes: L,
+		setFinalScore: R,
+		addIssue: B,
+		addIssues: te,
+		removeIssue: V,
+		reorderIssues: ie,
+		updateSettings: oe,
+		renameRoom: K,
+		updateAvatar: se,
+		kickMember: ce,
+		transferModerator: ue,
+		leaveRoom: Se,
 		closeRoom: Ce,
 		approveJoin: De,
 		rejectJoin: Oe,
 		approveAllJoin: Ae,
 		rejectAllJoin: je,
 		inviteMembers: async ({ room: e, member: t, payload: n }) => {
-			let r = Me(), i = (Array.isArray(n.users) ? n.users : []).map(ce);
+			let r = Me(), i = (Array.isArray(n.users) ? n.users : []).map(le);
 			if (i.length === 0) throw v("Choose at least one person to invite.");
 			let a = await u.listMembers(e.roomId), o = new Set(a.map((e) => e.memberKey)), s = await r.listInvitations(e.roomId), c = new Set(s.map((e) => e.invitee.id)), l = i.filter((e, t) => !o.has(e.id) && i.findIndex((t) => t.id === e.id) === t);
 			if (s.length + l.filter((e) => !c.has(e.id)).length > d.maxInvitationsPerRoom) throw x("This room has reached the maximum number of invitations.");
@@ -1072,7 +1076,7 @@ function ye(i, l) {
 			};
 		},
 		revokeInvite: async ({ room: e, payload: t }) => {
-			let n = Me(), r = V(t, "userId");
+			let n = Me(), r = H(t, "userId");
 			if (!r) throw v("A user is required.");
 			await n.removeInvitation(e.roomId, r);
 			let i = await n.listInvitations(e.roomId);
@@ -1081,8 +1085,8 @@ function ye(i, l) {
 				result: { invitations: i }
 			};
 		},
-		updateAccess: J,
-		claimModerator: be,
+		updateAccess: q,
+		claimModerator: xe,
 		heartbeat: Te,
 		exitRoom: Ee
 	}, Ne = /* @__PURE__ */ new Set(["requestResync", "heartbeat"]);
@@ -1094,11 +1098,11 @@ function ye(i, l) {
 		if (!t) throw S(`Action '${e.action}' is not available.`);
 		let n = await l.requireRoom(e.principal.roomId), r = await u.getMember(n.roomId, e.principal.sid);
 		if (!r) throw b("You are not a member of this room.");
-		if (f(e.action) && n.moderatorId !== r.sid) throw b(me);
+		if (f(e.action) && n.moderatorId !== r.sid) throw b(ge);
 		let i = await t({
 			room: n,
 			member: r,
-			payload: re(e.payload)
+			payload: ne(e.payload)
 		});
 		if (i.events.some((e) => e.audience.kind === "room") && !i.roomClosed && !Ne.has(e.action)) {
 			let e = await u.bumpRevision(n.roomId);
@@ -1115,7 +1119,7 @@ function ye(i, l) {
 	};
 }
 // engine/ports.ts
-var be = {
+var Se = {
 	maxRoomMembers: 50,
 	maxRoomIssues: 200,
 	maxRoomsPerMemberPerHour: 20,
@@ -1134,8 +1138,8 @@ var be = {
 	directoryLimit: 100
 };
 // engine/index.ts
-function xe(e) {
-	let t = Z(e), n = ye(e, t);
+function Q(e) {
+	let t = ue(e), n = xe(e, t);
 	return {
 		rooms: t,
 		dispatch: n.dispatch,
@@ -1143,4 +1147,4 @@ function xe(e) {
 		deps: e
 	};
 }
-export { _ as EngineError, x as conflictError, xe as createEngine, be as defaultEngineConfig, b as forbiddenError, X as normalizeIssue, ce as normalizeUserRef, y as notFoundError, z as optionalHttpUrl, L as optionalText, Y as parseAvatarId, oe as parseScoreType, B as requireRoomId, I as requireText, F as sanitizeText, s as summarizeVotes, D as toEmptyVote, k as toInvitation, O as toJoinRequest, w as toMember, E as toRevealedVote, C as toRoom, T as toVote, S as unsupportedError, v as validationError };
+export { _ as EngineError, x as conflictError, Q as createEngine, Se as defaultEngineConfig, b as forbiddenError, Y as normalizeIssue, le as normalizeUserRef, y as notFoundError, B as optionalHttpUrl, R as optionalText, ce as parseAvatarId, J as parseScoreType, V as requireRoomId, L as requireText, I as sanitizeText, s as summarizeVotes, D as toEmptyVote, k as toInvitation, O as toJoinRequest, w as toMember, E as toRevealedVote, C as toRoom, T as toVote, S as unsupportedError, v as validationError };

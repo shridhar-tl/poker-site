@@ -8,7 +8,8 @@ export interface RoomStore {
     removeRoom(roomId: string): Promise<void>;
     getMember(roomId: string, sid: string): Promise<MemberRecord | null>;
     listMembers(roomId: string): Promise<MemberRecord[]>;
-    putMember(roomId: string, member: MemberRecord): Promise<void>;
+    /** Resolves false, writing nothing, when the member already holds another session in the room. */
+    putMember(roomId: string, member: MemberRecord): Promise<boolean>;
     updateMember(roomId: string, sid: string, patch: MemberPatch): Promise<MemberRecord | null>;
     removeMember(roomId: string, sid: string): Promise<void>;
     getVote(roomId: string, issueId: string): Promise<VoteRecord | null>;
