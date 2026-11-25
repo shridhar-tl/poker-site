@@ -72,6 +72,7 @@ export interface PokerJoinRequest {
     status: JoinRequestStatus;
     createdAt: string;
     reason?: string;
+    restrictedIssueKeys?: string[];
 }
 export interface PokerInvitation {
     roomId: string;

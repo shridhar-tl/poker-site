@@ -19,6 +19,8 @@ export interface JoinRoomInput {
     name: string;
     avatarId: number | null;
     avatarUrl?: string;
+    /** Issues of the room the joining person cannot view. The moderator then has to approve the join, and is shown these keys. */
+    restrictedIssueKeys?: string[];
 }
 export type JoinOutcome = {
     kind: 'joined';

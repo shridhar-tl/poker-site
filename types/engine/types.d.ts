@@ -47,6 +47,7 @@ export interface JoinRequestRecord {
     status: JoinRequestStatus;
     createdAt: string;
     reason?: string;
+    restrictedIssueKeys?: string[];
 }
 export type InvitationRecord = PokerInvitation;
 export type RoomPatch = Partial<Pick<RoomRecord, 'roomName' | 'moderatorId' | 'moderatorKey' | 'currentIssueId' | 'issues' | 'settings' | 'access' | 'memberCount' | 'lastActivity'>>;
